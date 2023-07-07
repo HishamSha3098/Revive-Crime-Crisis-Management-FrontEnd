@@ -9,7 +9,7 @@ async function authorsTableData() {
 
     // Transform the fetched data into the desired format
     const transformedData = data.map((user) => ({
-      img: "Revive\$user.img",
+      img: user.img,
       name: user.name,
       volunteer : user.volunteer,
       email: user.email,

@@ -9,7 +9,7 @@ async function CrisisTableData() {
 
     // Transform the fetched data into the desired format
     const transformedData = data.map((data) => ({
-      img: "Revive\$user.img",
+      img: data.img,
       title: data.title,
       description: data.description,
       donation_goal: data.donation_goal,

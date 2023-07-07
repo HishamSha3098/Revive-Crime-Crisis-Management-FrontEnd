@@ -23,7 +23,7 @@ import {
   Cog6ToothIcon,
   PencilIcon,
 } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
 import { platformSettingsData, conversationsData, projectsData } from "@/data";
 // import { Input } from 'formik';
@@ -55,7 +55,24 @@ export function Crisis() {
   }, []);
 
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    formik.setFieldValue('dropzone_file', file);
+    console.log(file,'this is image');
+    const reader = new FileReader();
 
+    reader.onload = (e) => {
+      setSelectedImage(e.target.result);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+
+  const handleFileChange = (event) => {
+    const files = event.currentTarget.files[0];
+    formik.setFieldValue('file', files);
+  };
   const formik = useFormik({
 
     initialValues:{
@@ -68,48 +85,39 @@ export function Crisis() {
     description: '',
    
   },
-  onSubmit:(values) => {
-
-
-    console.log(values,'this is dir values');
-    const formData = {
-    'title' :values.title,
-    'price' :values.donation_goal,
-    'isActive' : values.isActive,
-    'description': values.description,
-    'file': values.file,
-    'image': values.dropzone_file,
-  }
-    console.log(formData,'this th form data sending django');
-
-
-    try {
-      axios.post('http://127.0.0.1:8000/user_manage/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+  
+  onSubmit: (values) => {
+    
+    const formData = new FormData();
+    formData.append('title', values.title);
+    formData.append('donation_goal', values.donation_goal);
+    formData.append('isActive', values.isActive);
+    formData.append('description', values.description);
+    formData.append('file', values.file);
+    formData.append('dropzone_file', values.dropzone_file);
+  
+    // Send the formData to the server using Axios
+    console.log(...formData);
+    axios.post('http://127.0.0.1:8000/add_crisis/', formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+        })
+      .then((response) => {
+        // Handle the response from the server
+        console.log(response.data);
+        // useNavigate('/dashboard/Crisis')
+      })
+      .catch((error) => {
+        // Handle any errors
+        console.error(error.response.data);
       });
-
-      // Handle success or show a success message
-    } catch (error) {
-      // Handle error or show an error message
-    }
   }
 });
 
 
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    console.log(file,'this is image');
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      setSelectedImage(e.target.result);
-    };
-
-    reader.readAsDataURL(file);
-  };
+  
 
   // const handleSubmit = async (values) => {
   //   try {
@@ -129,12 +137,10 @@ export function Crisis() {
       </div>
       <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
         <CardBody className="p-4">
-          {/* <div className="mb-10 flex items-center justify-between gap-6"> */}
+          
          
         <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
-          {/* <Typography variant="h6" color="white">
-            Crisis Managment
-          </Typography> */}
+          
           <Button className="end-2.5" onClick={setShowModal} variant="h6" color="white">
             Add New Crisis
           </Button>
@@ -168,10 +174,10 @@ export function Crisis() {
                   }`;
 
                   return (
-                    <tr key={name}>
+                    <tr key="3">
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={img} alt={title} size="sm" />
+                          <Avatar src={`http://127.0.0.1:8000/${img}`} alt={title} size="sm" />
                           <div>
                             <Typography
                               variant="small"
@@ -231,7 +237,7 @@ export function Crisis() {
       {showModal ? (
         <>
         
-                <form className="flex items-center justify-center w-full" onSubmit={formik.handleSubmit}>
+                <form className="flex items-center justify-center w-full" onSubmit={formik.handleSubmit} encType="multipart/form-data">
 
           <div
             className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -285,7 +291,7 @@ export function Crisis() {
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
           </div>
-          <input id="dropzone_file" type="file" value={formik.values.dropzone_file}  name="dropzone_file" onChange={handleImageUpload} className="hidden" />
+          <input id="dropzone_file" type="file" name="dropzone_file" onChange={handleImageUpload} className="hidden" />
         </label>
       </div>
       <div className= "md:col-span-2 w-full  md:grid  md:grid-cols-2 ">
@@ -324,22 +330,14 @@ export function Crisis() {
       type="file"
       name="file"
       id="file"
-      value={formik.values.file} 
-      onChange={formik.handleChange} 
+      // value={formik.values.file} 
+      onChange={handleFileChange}
       label="Document Upload"
       className=''
     />
  </div>
   <div className="w-full md:w-1/2 lg:w-1/4  px-4 h-10 mb-1 lg:mb-0">
-    {/* <input
-      type="radio"
-      name="name"
-      id="name"
-      // value={userData.name}
-      placeholder="fdgshjk"
-      label="Active"
-      className=''
-    /> */}
+   
     <Checkbox 
     value={formik.values.isActive} // Pass the value from formik.values
     onChange={formik.handleChange}
@@ -377,7 +375,7 @@ export function Crisis() {
                   <button
                     className="bg-blue-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="submit"
-                    // onClick={() => setShowModal(false)}
+                   
                   >
                     Add Crisis
                   </button>

@@ -39,8 +39,8 @@ export function Profile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await authorsTableData();
-        setTableData(data);
+        const datas = await authorsTableData();
+        setTableData(datas);
       } catch (error) {
         console.error('Error fetching table data:', error);
       }
@@ -60,7 +60,7 @@ export function Profile() {
     if (active.data.message){
       console.log(active.message)
       toast.success(active.data.message)
-      setTableData(active.data)
+      fetchData()
     }
     else{
       console.log("nothing hsppend");
@@ -116,7 +116,7 @@ export function Profile() {
                     <tr key={name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={img} alt={name} size="sm" />
+                          <Avatar src={`http://127.0.0.1:8000/${img}`} alt={name} size="sm" />
                           <div>
                             <Typography
                               variant="small"
