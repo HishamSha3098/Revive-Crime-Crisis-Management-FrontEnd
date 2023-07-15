@@ -9,6 +9,7 @@ async function CrisisTableData() {
 
     // Transform the fetched data into the desired format
     const transformedData = data.map((data) => ({
+      id:data.id,
       img: data.img,
       title: data.title,
       description: data.description,

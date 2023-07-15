@@ -33,102 +33,140 @@ import { useEffect, useState } from "react";
 import CrisisTableData from "@/data/crisisListData ";
 import axios from "axios";
 import { Formik,Form, useFormik } from "formik";
+import { toast } from "react-hot-toast";
 
 
 
 export function Crisis() {
   const [tableData, setTableData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [existingImage, setExistingImage] = useState('');
+
+  const [crisisId, setCrisisId] = useState(null);
+  const [crises, setCrises] = useState([]);
+
+  const [formData, setFormData] = useState({
+    id: null,
+    title: '',
+    description: '',
+    dropzone_file: null,
+    donation_goal: '',
+    // is_active: false,
+    file: null,
+  });
+
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await CrisisTableData();
-        setTableData(data);
-      } catch (error) {
-        console.error('Error fetching table data:', error);
-      }
-    };
-
-    fetchData();
+    fetchCrises();
   }, []);
 
+  const fetchCrises = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/crisis_list/');
+      setCrises(response.data);
+      console.log(crises,'this incomig data');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    formik.setFieldValue('dropzone_file', file);
-    console.log(file,'this is image');
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+  
+
+  const handleFileInputChange = (e) => {
+    const { name, files } = e.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: files[0] }));
+    console.log(formData);
+  
+    if (name ==='dropzone_file'){
     const reader = new FileReader();
-
     reader.onload = (e) => {
       setSelectedImage(e.target.result);
     };
-
-    reader.readAsDataURL(file);
-  };
-
-
-  const handleFileChange = (event) => {
-    const files = event.currentTarget.files[0];
-    formik.setFieldValue('file', files);
-  };
-  const formik = useFormik({
-
-    initialValues:{
-    title: '',
-    file: null,
-    dropzone_file:null,
-    donation_goal: '',
-    // recived_amount: '',
-    isActive: false,
-    description: '',
-   
-  },
-  
-  onSubmit: (values) => {
-    
-    const formData = new FormData();
-    formData.append('title', values.title);
-    formData.append('donation_goal', values.donation_goal);
-    formData.append('isActive', values.isActive);
-    formData.append('description', values.description);
-    formData.append('file', values.file);
-    formData.append('dropzone_file', values.dropzone_file);
-  
-    // Send the formData to the server using Axios
-    console.log(...formData);
-    axios.post('http://127.0.0.1:8000/add_crisis/', formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-        })
-      .then((response) => {
-        // Handle the response from the server
-        console.log(response.data);
-        // useNavigate('/dashboard/Crisis')
-      })
-      .catch((error) => {
-        // Handle any errors
-        console.error(error.response.data);
-      });
+    reader.readAsDataURL(files[0]);
   }
-});
+  };
 
 
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== null) {
+          console.log("im in document if");
 
+          if (key === 'document' && Array.isArray(value) && value.length === 0)  {
+            console.log("im in document if");
+            throw new Error('Please select a document file.');
+          }
+          console.log("im in document else");
+
+          data.append(key, value);
+        }
+      });
+      console.log(formData);
+      if (formData.id !== null) {
+        
+        // formData.document = crises.document
+      console.log(data);
+
+        // If the crisis has an ID, it means it already exists and we should update it
+       const response = await axios.post(`http://127.0.0.1:8000/update_crisis/${formData.id}/`, data);
+       if (response.data.message === 'success'){
+        toast.success("Crisis Updated Successfully")
+        setShowModal(false)
+
+       }else{
+        toast.error("Crisis Updation failed")
+
+       }
+      } else {
+      console.log(data);
+      // If the crisis doesn't have an ID, it means it's a new crisis and we should add it
+       const response = await axios.post('http://127.0.0.1:8000/add_crisis/', data);
+        if (response.data.message == 'success'){
+          toast.success("Crisis Added Successfully")
+          setShowModal(false)
+         }else{
+          toast.error("Crisis Creation failed")
   
+         }
+      }
 
-  // const handleSubmit = async (values) => {
-  //   try {
-  //     const response = await axios.post('http://127.0.0.1:8000/user_manage/', values);
-  //     console.log(response.data);
-  //     // Handle success or perform any necessary actions
-  //   } catch (error) {
-  //     console.error(error);
-  //     // Handle error or display error message
-  //   }
-  // };
+      setFormData({
+        id: null,
+        title: '',
+        description: '',
+        dropzone_file: null,
+        donation_goal: '',
+        // is_active:false,
+        file: null,
+      });
+      fetchCrises();
+      console.log(existingImage);
+      
+      setSelectedImage(existingImage);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (crisisId) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/update_crisis/${crisisId}/`);
+      fetchCrises();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
 
   return (
     <>
@@ -165,26 +203,26 @@ export function Crisis() {
               </tr>
             </thead>
             <tbody>
-              {tableData.map(
-                ({ img, title,description,recived_amount,donation_goal, is_active }, key) => {
+              {crises.map(
+                (crisis,key) => {
                   const className = `py-3 px-5 ${
-                    key === authorsTableData.length - 1
+                    key === crises.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                   }`;
 
                   return (
-                    <tr key="3">
+                    <tr key={crisis.id}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`http://127.0.0.1:8000/${img}`} alt={title} size="sm" />
+                          <Avatar src={`http://127.0.0.1:8000/${crisis.img}`} alt={crisis.title} size="sm" />
                           <div>
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              {title}
+                              {crisis.title}
                             </Typography>
                             <Typography className="text-xs font-normal text-blue-gray-500">
                               {/* {description}3 */}34567
@@ -194,21 +232,21 @@ export function Crisis() {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {recived_amount}
+                          {crisis.recived_amount}
                         </Typography>
                         
                       </td>
                       
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {donation_goal}
+                          {crisis.donation_goal}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={is_active ? "green" : "blue-gray"}
-                          value={is_active ? "Active" : "Closed"}
+                          color={crisis.is_active ? "green" : "blue-gray"}
+                          value={crisis.is_active ? "Active" : "Closed"}
                           className="py-0.5 px-2 text-[11px] font-medium"
                         />
                       </td>
@@ -216,12 +254,17 @@ export function Crisis() {
                         <a
                           as="a"
                           href="#"
-                          onClick={setShowModal}
+                          onClick={() => {
+                            setExistingImage(`http://127.0.0.1:8000/${crisis.img}`); // Set the existing image URL
+                            setFormData({ ...crisis, id: crisis.id });
+                            setShowModal(true)
+                          }}
                           className="text-xs font-semibold text-blue-gray-600"
                           
                         >
                           Edit
                         </a>
+                        <a onClick={() => handleDelete(crisis.id) }>Delete</a>
                       </td>
                     </tr>
                   );
@@ -235,9 +278,10 @@ export function Crisis() {
         </CardBody>
       </Card>
       {showModal ? (
+        // Modal Starts Here
         <>
         
-                <form className="flex items-center justify-center w-full" onSubmit={formik.handleSubmit} encType="multipart/form-data">
+                <form className="flex items-center justify-center w-full" onSubmit={handleFormSubmit}>
 
           <div
             className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -291,7 +335,7 @@ export function Crisis() {
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
           </div>
-          <input id="dropzone_file" type="file" name="dropzone_file" onChange={handleImageUpload} className="hidden" />
+          <input id="dropzone_file" type="file" name="dropzone_file" onChange={handleFileInputChange} className="hidden" required />
         </label>
       </div>
       <div className= "md:col-span-2 w-full  md:grid  md:grid-cols-2 ">
@@ -301,10 +345,11 @@ export function Crisis() {
       name="title"
       id="title"
      
-      value={formik.values.title} 
-      onChange={formik.handleChange} 
+      value={formData.title}
+      onChange={handleInputChange} 
       label="Title"
       className=''
+      required
     />
 
   </div>
@@ -317,10 +362,11 @@ export function Crisis() {
       type="text"
       name="donation_goal"
       id="donation_goal"
-      value={formik.values.donation_goal} 
-      onChange={formik.handleChange} 
+      value={formData.donation_goal} 
+      onChange={handleInputChange}
       label="Donation Goal"
       className=''
+      required
     />
 
   </div>
@@ -331,16 +377,17 @@ export function Crisis() {
       name="file"
       id="file"
       // value={formik.values.file} 
-      onChange={handleFileChange}
+      onChange={handleFileInputChange}
       label="Document Upload"
       className=''
+      required
     />
  </div>
   <div className="w-full md:w-1/2 lg:w-1/4  px-4 h-10 mb-1 lg:mb-0">
    
     <Checkbox 
-    value={formik.values.isActive} // Pass the value from formik.values
-    onChange={formik.handleChange}
+    value={formData.is_active}
+    onChange={handleInputChange} 
     id="isActive" name="isActive" label="Active" />
 
   </div>
@@ -348,11 +395,11 @@ export function Crisis() {
     <Textarea
       type="text"
       name="description"
-      value={formik.values.description} 
-      onChange={formik.handleChange} 
+      value={formData.description}
+      onChange={handleInputChange} 
       label="Description"
       id="description" 
-      
+      required
       className=''
     />
  </div>
@@ -377,7 +424,7 @@ export function Crisis() {
                     type="submit"
                    
                   >
-                    Add Crisis
+                    {formData.id ? 'Update Crisis' : 'Add Crisis'}
                   </button>
                 </div>
               </div>
@@ -389,6 +436,8 @@ export function Crisis() {
 
         </>
       ) : null}
+
+     
     </>
   );
 }

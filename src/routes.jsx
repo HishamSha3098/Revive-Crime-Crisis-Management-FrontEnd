@@ -12,10 +12,11 @@ import {
   UsersIcon,
   Squares2X2Icon,
 } from "@heroicons/react/24/solid";
-import { Profile, DashHome, Crisis } from "@/pages/dashboard";
+import { Profile, DashHome } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 import EventManagment from "./pages/dashboard/event";
 import GalleryManagment from "./pages/dashboard/Gallery";
+import Crisis from "./pages/dashboard/crisis";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
