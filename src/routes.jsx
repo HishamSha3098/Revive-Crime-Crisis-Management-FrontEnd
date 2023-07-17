@@ -53,7 +53,7 @@ export const routes = [
       {
         icon: <PhotoIcon {...icon} />,
         name: "Gallery Managment",
-        path: "/notifactions",
+        path: "/gallery",
         element: <GalleryManagment />,
       },
     ],
