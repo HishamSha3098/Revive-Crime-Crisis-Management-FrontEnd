@@ -34,6 +34,7 @@ import CrisisTableData from "@/data/crisisListData ";
 import axios from "axios";
 import { Formik,Form, useFormik } from "formik";
 import { toast } from "react-hot-toast";
+import Swal from 'sweetalert2';
 
 
 
@@ -71,17 +72,18 @@ export function Crisis() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(formData.image,"im in  input ");
     
     if (formData.image != null){
       console.log(formData.image,"im in if input");
       setFormData({ ...formData, [name]: value ,image:null});
     console.log(formData, 'this is handle file input sss');
-  }
+  }else{
     console.log(formData.image,"im in else input ");
 
     setFormData({ ...formData, [name]: value});
     console.log(formData, 'this is handle file input 22');
-  
+  }
 
     
   };
@@ -159,10 +161,32 @@ export function Crisis() {
 
   const handleDeleteEvent = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/eventManage/${id}/`);
-      await fetchEvents();
+      // Show a SweetAlert confirmation dialog
+      const confirmDelete = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this Event!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+      });
+  
+      if (confirmDelete.isConfirmed) {
+        // User clicked "Yes, delete it!", proceed with the deletion
+        await axios.delete(`http://127.0.0.1:8000/eventManage/${id}/`);
+        await fetchEvents();
+        
+        // Show a success SweetAlert after the deletion
+        await Swal.fire('Deleted!', 'The gallery has been deleted.', 'success');
+      } else {
+        // User clicked "Cancel" or closed the SweetAlert, do nothing or handle accordingly
+        console.log('Deletion canceled.');
+      }
     } catch (error) {
-      console.error('Error deleting crisis:', error);
+      console.error('Error deleting event:', error);
+      // Show an error SweetAlert if the deletion fails
+      await Swal.fire('Error', 'An error occurred while deleting the gallery.', 'error');
     }
   };
 

@@ -30,46 +30,73 @@ import authorsTableData from "@/data/UserListData";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import Swal from 'sweetalert2';
 
 
 
 export function Profile() {
   const [tableData, setTableData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const datas = await authorsTableData();
-        setTableData(datas);
-      } catch (error) {
-        console.error('Error fetching table data:', error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const datas = await authorsTableData();
+      setTableData(datas);
+    } catch (error) {
+      console.error('Error fetching table data:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
-  const handleUserBlock =async (email) => {
-    console.log(email,'this is params email')
-    const active = await axios.post('http://127.0.0.1:8000/user_manage/',{
+  const handleUserBlock = (email, online) => {
+    // Determine the action based on the current state
+    const action = online ? 'Block' : 'Unblock';
+    // Show a confirmation dialog using SweetAlert
+    Swal.fire({
+      title: 'Confirm Action',
+      text: `Are you sure you want to ${action} the user with email ${email}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: `Yes, ${action} it!`,
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          console.log(email, 'this is params email');
+          // Perform the block/unblock action based on the current state
+          const active = await axios.post('http://127.0.0.1:8000/user_manage/', {
+            email: email,
+          });
       
-        email: email,
-     
-    })
-    
-    if (active.data.message){
-      console.log(active.message)
-      toast.success(active.data.message)
-      fetchData()
-    }
-    else{
-      console.log("nothing hsppend");
-    }
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 2000);
-    
-  }
+          if (active.data.message) {
+            console.log(active.message);
+            // Use SweetAlert for the success message
+            Swal.fire({
+              title: 'Success',
+              text: active.data.message,
+              icon: 'success',
+            });
+            await fetchData(); // Use await to wait for the data to be fetched before updating the state
+          } else {
+            console.log('nothing happened');
+          }
+        } catch (error) {
+          console.error(`Error ${action}ing user:`, error);
+          // Use SweetAlert for error message
+          Swal.fire({
+            title: 'Error',
+            text: `An error occurred while ${action}ing the user.`,
+            icon: 'error',
+          });
+        }
+      } else {
+        console.log(`${action} operation canceled.`);
+      }
+    });
+  };
   return (
     <>
       <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80)] bg-cover	bg-center">
@@ -158,7 +185,7 @@ export function Profile() {
                       <td className={className}>
                         {online?
                         <Button
-                          onClick={()=>handleUserBlock(email)}
+                          onClick={()=>handleUserBlock(email,online)}
                           className="text-xs bg-red-500 font-semibold text-gray-100"
                         >
                           Block

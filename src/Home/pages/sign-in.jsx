@@ -128,9 +128,9 @@ export function SignIn() {
             {errors.password && touched.password ? (
                   <p className="text-red-500 text-sm">{errors.password}</p>
                 ) : null}
-            <div className="-ml-2.5">
-              <Checkbox label="Remember Me" />
-            </div>
+            <a className="-ml-0 text-blue-gray-400" href="" onClick={""}>
+              Forget password
+            </a>
           </CardBody>
           <CardFooter className="pt-0">
             <Button type="submit" variant="gradient" fullWidth>
