@@ -19,117 +19,159 @@ import { toast } from "react-hot-toast";
 
 
 export function UserProfile() {
-
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const user_id = localStorage.getItem("user_id");
-  console.log(user_id,"this user id from localstorage----")
-  const fileInputRef = useRef(null);
+  const user_id = localStorage.getItem('user_id');
+  const [tableData, setTableData] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  // const [showModal2, setShowModal2] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [existingImage, setExistingImage] = useState('');
 
-  const [userData, setUserData] = useState({});
-  const navigate = useNavigate();
+  // const [crisisId, setCrisisId] = useState(null);
+  const [userData, setUserdata] = useState([]);
+  const [formData, setFormData] = useState({
+    id: null,
+    name: '',
+    email: '',
+    image: null,
+    age: '',
+    blood_group: '',
+    marital_status: '',
+    address: '',
+    phone:''
+
+
+  });
 
   useEffect(() => {
-    // // Check if user_id exists before making the API call
-    // console.log("--------------dfdfd----------dfdf--------------dfdf---------");
-    // console.log(user_id, "-----------=========-this user id from localStorage");
-    console.log("dvjwedvjwhedgouiwhejhjtuftoyihljkhjcg ufygiuohiljbkhvj");
-    if (user_id) {
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.get("http://127.0.0.1:8000/user_data/", {
-            params: {
-              user_id: user_id,
-            },
-          });
-  
-          setUserData(response.data);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          navigate("/login");
-        }
-      };
-  
-      fetchUserData();
-    } else {
-      navigate("/login"); // Redirect to login page if user_id is invalid/
-    }
-  }, [user_id, navigate]);
+    fetchUserData();
+  }, [showForm]);
+  console.log("lll",formData.marital_status);
 
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      phone: "",
-      age: "",
-      blood_group: "",
-      marital_status: "",
-      address: "",
-    },
-    
-    validationSchema: ProfileSchema,
-    onSubmit: async (values) => {
-      Object.keys(values).forEach((fieldName) => {
-        // Remove the condition to allow updating values even if they are empty
-       if (!values[fieldName]) {
-          switch (fieldName) {
-            case "name":
-              values[fieldName] = userData.name;
-              break;
-            case "email":
-              values[fieldName] = userData.email;
-              break;
-            case "phone":
-              values[fieldName] = userData.phone;
-              break;
-            case "age":
-              values[fieldName] = userData.age;
-              break;
-            case "blood_group":
-              values[fieldName] = userData.blood_group;
-              break;
-            case "marital_status":
-              values[fieldName] = userData.marital_status;
-              break;
-            case "address":
-              values[fieldName] = userData.address;
-              break;
-            default:
-              // Handle other fields here
-              break;
-        }
-      }
-      });
+ const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/user_data/${user_id}/`);
+      setUserdata(response.data);
       
-      try {
-        setIsLoading(true); // Start showing the spinner
-        const { data } = await axios.post(`http://127.0.0.1:8000/updateuser/${user_id}/`, values);
+      setFormData({
+        id:userData.id,
+        name:userData.name,
+        email:userData.email,
+        image:null,
+        age:userData.age,
+        blood_group:userData.blood_group,
+        marital_status : userData.marital_status,
+        address:userData.address,
+        phone:userData.phone
         
-        if (data.message === 'User Updated Successfully'){
-          toast.success("User Updated Successfully")
-        } else {
-          toast.error("User Updation Failed")
-        }
-      } catch (error) {
-        console.error("Error updating user:", error);
-        toast.error("User Updation Failed")
-      } finally {
-        setIsLoading(false);
-      }
-    },
+      })
+
+      console.log(formData,'its adter seting in get');
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  console.log(userData,'this is the data got');
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    console.log(formData.image,"im in  input ");
     
-  });
+    if (formData.image != null){
+      console.log(formData.image,"im in if input");
+      setFormData({ ...formData, [name]: value ,image:null});
+    console.log(formData, 'this is handle file input sss');
+  }else{
+    console.log(formData.image,"im in else input ");
+
+    setFormData({ ...formData, [name]: value});
+    console.log(formData, 'this is handle file input 22');
+  }
+
+    
+  };
+
+
   const handleToggleForm = () => {
     setShowForm(!showForm);
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    // Handle file upload logic here
-  };
 
-  const handleUploadClick = () => {
-    fileInputRef.current.click();
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({ ...formData, image: file }); // Corrected property name to 'image'
+    console.log(formData, 'this is handle file input');
+    
+    if (e.target.name === 'image' && file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSelectedImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  console.log(formData.image,";;;");
+
+
+  const handleFormSubmit = async (e) => {
+    setIsLoading(true)
+    e.preventDefault();
+  
+    try {
+      const formValues = new FormData();
+      formValues.append('name', formData.name);
+      console.log(formData.name);
+      formValues.append('email', formData.email);
+      formValues.append('phone', formData.phone);
+      formValues.append('age', formData.age);
+      formValues.append('blood_group', formData.blood_group);
+      formValues.append('marital_status', formData.marital_status);
+      formValues.append('address', formData.address);
+      
+  
+      if (formData.image) {
+        formValues.append('image', formData.image);
+      }
+      
+      
+        // Update existing crisis
+        console.log(formValues);
+        const {data} = await axios.put(`http://127.0.0.1:8000/updateuser/${formData.id}/`, formValues);
+        
+        if (data.message === 'User Updated Successfully'){
+          setIsLoading(false)
+          toast.success("User Updated Successfully")
+        }
+      // Clear the form data and fetch the updated crisis list only on successful submission
+      // setFormData({
+      //   id: null,
+      //   name: '',
+      //   email: '',
+      //   image: null,
+      //   age: '',
+      //   blood_group: '',
+      //   marital_status: '',
+      //   address: '',
+      //   phone:''
+      // });
+      // await fetchUserData();
+    } catch (error) {
+      console.error('Error submitting crisis:', error);
+      // Handle the error here if needed
+    }
+  };
+  
+
+  const handleEditCrisis = (event) => {
+    setFormData({
+      id: event.id,
+      title: event.title,
+      place: event.place,
+      Date_time: event.Date_time,
+      description: event.description,
+      image: null,
+    });
   };
 
   return (
@@ -159,12 +201,18 @@ export function UserProfile() {
                 <div className="flex w-full justify-center px-4 lg:order-2 lg:w-3/12">
                   <div className="relative">
                     <div className="-mt-20 w-40">
+                      {selectedImage?(
                       <Avatar
-                        src="https://static.vecteezy.com/system/resources/thumbnails/019/900/322/small/happy-young-cute-illustration-face-profile-png.png"
+                        src="{selectedImage}"
                         alt="Profile picture"
                         variant="circular"
                         className="h-full w-full shadow-xl"
-                      />
+                      />):(<Avatar
+                        src={userData.image}
+                        alt="Profile picture"
+                        variant="circular"
+                        className="h-full w-full shadow-xl"
+                      />)}
                     </div>
                   </div>
                 </div>
@@ -232,7 +280,7 @@ export function UserProfile() {
                   <Typography className="font-medium text-blue-gray-700">
                   {userData.address}<br/>
                   {userData.phone}<br/> Age:{userData.age}  Blood Group:{userData.blood_group}<br/>
-                  Martial Status:{userData.Martial_Status}
+                  Martial Status:{userData.marital_status}
                   {/* {userData.age},{userData.blood_group} */}
                   </Typography>
                 </div>
@@ -240,21 +288,20 @@ export function UserProfile() {
               </div>
 
               <div className={`flex flex-wrap justify-center ${showForm ? 'visible' : 'hidden'}`}>
-               <form onSubmit={formik.handleSubmit}>
+               <form onSubmit={handleFormSubmit}>
         <div>
           <div className="grid  grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
   <div className="w-full md:w-1/2 lg:w-1/4 px-4 pb-5">
-    <Input
+  <Input
       type="text"
       name="name"
       id="name"
-      // value={userData.name}
-      // placeholder={userData.name}
+     
+      value={formData.name}
+      onChange={handleInputChange} 
       label="Name"
-      className={`block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm ${
-        formik.errors.name && formik.touched.name ? 'border-red-500' : 'border-gray-300'
-      }`}
-      {...formik.getFieldProps("email")}
+      className=''
+      
     />
 
   </div>
@@ -263,41 +310,36 @@ export function UserProfile() {
       type="email"
       name="email"
       id="email"
-      
+      value={formData.email}
+      onChange={handleInputChange} 
       label="Email"
-      className={`sm:text-sm ${
-        formik.errors.email && formik.touched.email ? 'border-red-500' : 'border-gray-300'
-      }`}
-      {...formik.getFieldProps("email")}
+      
     />
   </div>
   <div className="w-full md:w-1/2 lg:w-1/4 px-4 pb-5">
-    <Select
-      id="marital_status"
-      name="marital_status"
-      label="Martial_Status"
-      onChange={formik.handleChange}
-      // className="0 w-full"
-    >
-      {/* <option value="">Select an option</option> */}
-      <Option value="married">Married</Option>
-      <Option value="single">single</Option>
-      <Option value="widowed">widowed</Option>
-      <Option value="none">none</Option>
-
-    </Select>
+  <select
+  id="marital_status"
+  name="marital_status"
+  value={formData.marital_status}
+  onChange={(e) => handleInputChange(e)}
+  className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"
+>
+  <option value="married">Married</option>
+  <option value="single">Single</option>
+  <option value="widowed">Widowed</option>
+  <option value="none">None</option>
+</select>
   </div>
   <div className="w-full md:w-1/2 lg:w-1/4 px-4 pb-5">
     <Input
       type="text"
       name="address"
       label="Address"
+      value={formData.address}
       id="address"
+      onChange={handleInputChange} 
       
-      className={`sm:text-sm ${
-        formik.errors.address && formik.touched.address ? 'border-red-500' : 'border-gray-300'
-      }`}
-      {...formik.getFieldProps("address")}
+      
       
     />
   </div>
@@ -307,11 +349,10 @@ export function UserProfile() {
       name="phone"
       id="phone"
       label="Phone"
+      value={formData.phone}
+      onChange={handleInputChange} 
       
-      className={`sm:text-sm ${
-        formik.errors.phone && formik.touched.phone ? 'border-red-500' : 'border-gray-300'
-      }`}
-      {...formik.getFieldProps("phone")}
+      
       
     />
   </div>
@@ -320,12 +361,11 @@ export function UserProfile() {
       type="text"
       name="age"
       id="age"
+      onChange={handleInputChange} 
+      value={formData.age}
       label="Age"
       
-      className={`sm:text-sm ${
-        formik.errors.age && formik.touched.age ? 'border-red-500' : 'border-gray-300'
-      }`}
-      {...formik.getFieldProps("age")}
+     
       
     />
   </div>
@@ -334,25 +374,29 @@ export function UserProfile() {
       type="text"
       id="blood_group"
       name="blood_group"
-      
-      className={`sm:text-sm ${
-        formik.errors.blood_group && formik.touched.blood_group ? 'border-red-500' : 'border-gray-300'
-      }`}
-      {...formik.getFieldProps("blood_group")}
+      onChange={handleInputChange} 
+      value={formData.blood_group}
       label="Blood-Group"
     />
   </div>
   <div className="w-full md:w-1/2 lg:w-1/4 px-4 pb-5">
   {/* <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input"></label> */}
-  <Input className="w-full text-sm text-gray-900 border border-gray-900 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-900 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" label="File upload" type="file" />
+  <Input className="w-full text-sm text-gray-900 border border-gray-900 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-900 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" label="File upload" onChange={handleFileInputChange} type="file" />
   </div>
   
   </div>
-  <div className="w-full md:w-1/2 lg:w-1/4 px-4 pb-5">
+  <div className="w-full md:w-1/2 lg:w-1/4 px-4 pb-5 gap-6">
     <Button type="submit" className="bg-blue-900">
       Submit
     </Button>
+
+    <Button onClick={handleToggleForm} className="bg-red-600">
+      Close
+    </Button>
   </div>
+  
+    
+  
   </div>
 
   </form>
