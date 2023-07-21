@@ -124,11 +124,19 @@ export function Crisis() {
       
       if (formData.id) {
         // Update existing crisis
-        console.log(formData);
-        await axios.put(`http://127.0.0.1:8000/eventManage/${formData.id}/`, formValues);
+        console.log(formData,'this is form data');
+        const response = await axios.put(`http://127.0.0.1:8000/eventManage/${formData.id}/`, formValues);
+        if (response.data){
+        setShowModal(false)
+        toast.success("Event Updated Successfully")}
+        else{
+          toast.error("Updation failed")
+        }
       } else {
         // Add new crisis
         await axios.post('http://127.0.0.1:8000/event/', formValues);
+        setShowModal(false)
+
       }
   
       // Clear the form data and fetch the updated crisis list only on successful submission

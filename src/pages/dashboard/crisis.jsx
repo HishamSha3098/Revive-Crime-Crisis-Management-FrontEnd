@@ -357,7 +357,7 @@ export function Crisis() {
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
           </div>
-          <input id="dropzone_file" type="file" name="dropzone_file" onChange={handleFileInputChange} className="hidden" required />
+          <input id="dropzone_file" type="file" name="dropzone_file" onChange={handleFileInputChange} className="hidden" />
         </label>
       </div>
       <div className= "md:col-span-2 w-full  md:grid  md:grid-cols-2 ">
@@ -402,7 +402,7 @@ export function Crisis() {
       onChange={handleFileInputChange}
       label="Document Upload"
       className=''
-      required
+      
     />
  </div>
   <div className="w-full md:w-1/2 lg:w-1/4  px-4 h-10 mb-1 lg:mb-0">

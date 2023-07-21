@@ -119,6 +119,7 @@ export function Gallery() {
   
          }
        else {
+        console.log(formData,'this is create formdtaa');
         // Add a new event
         await axios.post('http://127.0.0.1:8000/gallery/', formValues);
       }

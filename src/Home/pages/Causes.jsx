@@ -4,115 +4,47 @@ import {
   BriefcaseIcon,
   BuildingLibraryIcon,
 } from "@heroicons/react/24/solid";
-import { Footer } from "@/Home/widgets/layout";
+import {PageTitle, Footer } from "@/Home/widgets/layout";
 import React, { useEffect, useRef, useState } from "react";
 import ComplexNavbar from "@/widgets/layout/navbar";
-import { useFormik } from "formik";
+
+
 import LoadingSpinner from "@/utils/loadingSpinner";
 import { useNavigate } from "react-router-dom";
-import { ProfileSchema } from "@/yup";
+
 import axios from "axios";
-import { toast } from "react-hot-toast";
+
 
 
 
 
 
 export function CausesHome() {
-
-  const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const user_id = localStorage.getItem("user_id");
-  console.log(user_id,"this user id from localstorage----")
-  const fileInputRef = useRef(null);
-
-  const [userData, setUserData] = useState({});
+  const [progressvalue , setProgressValue] = useState({})
+  const [Crisis, setCrisis] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchCrisis();
+  }, []);
+
+  const fetchCrisis = async () =>{
+    const response =await axios.get('http://127.0.0.1:8000/crisis_list/')
+    setCrisis(response.data)
+
+   
+  }
+
+
   
-
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      phone: "",
-      age: "",
-      blood_group: "",
-      marital_status: "",
-      address: "",
-    },
-    
-    validationSchema: ProfileSchema,
-    onSubmit: async (values) => {
-      Object.keys(values).forEach((fieldName) => {
-        // Remove the condition to allow updating values even if they are empty
-       if (!values[fieldName]) {
-          switch (fieldName) {
-            case "name":
-              values[fieldName] = userData.name;
-              break;
-            case "email":
-              values[fieldName] = userData.email;
-              break;
-            case "phone":
-              values[fieldName] = userData.phone;
-              break;
-            case "age":
-              values[fieldName] = userData.age;
-              break;
-            case "blood_group":
-              values[fieldName] = userData.blood_group;
-              break;
-            case "marital_status":
-              values[fieldName] = userData.marital_status;
-              break;
-            case "address":
-              values[fieldName] = userData.address;
-              break;
-            default:
-              // Handle other fields here
-              break;
-        }
-      }
-      });
-      
-      try {
-        setIsLoading(true); // Start showing the spinner
-        const { data } = await axios.post(`http://127.0.0.1:8000/updateuser/${user_id}/`, values);
-        
-        if (data.message === 'User Updated Successfully'){
-          toast.success("User Updated Successfully")
-        } else {
-          toast.error("User Updation Failed")
-        }
-      } catch (error) {
-        console.error("Error updating user:", error);
-        toast.error("User Updation Failed")
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    
-  });
-  const handleToggleForm = () => {
-    setShowForm(!showForm);
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    // Handle file upload logic here
-  };
-
-  const handleUploadClick = () => {
-    fileInputRef.current.click();
-  };
 
   return (
     
     <>
 
       <section className="relative block h-[50vh]">
-        <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('https://innova-it.co.il/wp-content/uploads/2018/12/bg.jpg')] bg-cover bg-center" />
+        <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('http://localhost:5173/public/img/banner-crisis.jpg')] bg-cover bg-center" />
 
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
 
@@ -126,14 +58,30 @@ export function CausesHome() {
         </div>
       )}
 
+<br/>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+<div className="container mx-auto">
+          <PageTitle heading="Extending a Helping Hand">
+          Together, we can be a beacon of hope amidst the storms of crisis. Your donation can make a difference in the lives of these facing adversity.
+          </PageTitle>
+         
+        </div>
+        <br/>
+        <br/>
+        <br/>
 
-<Card className="shadow-lg shadow-gray-500/10">
+
+<div className=" flex justify-center">
+
+<div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-7xl gap-4">
+
+{Crisis.length > 0 ?(
+Crisis.map((crisis,index)=>(
+<Card key={index} className="shadow-lg mt-6 shadow-gray-500/10">
                 <CardHeader className="relative h-56">
                   <img
                     alt="Card Image"
-                    src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
+                    src={`http://127.0.0.1:8000/${crisis.img}`}
                     className="h-full w-full"
                   />
                 </CardHeader>
@@ -141,118 +89,42 @@ export function CausesHome() {
                   <Typography
                     variant="h5"
                     color="blue-gray"
-                    className="mb-3 font-bold"
+                    className="mb-3 font-bold text-sm"
                   >
-                    Top Notch Services
+                    {crisis.title}
                   </Typography>
                   <Typography className="font-normal text-blue-gray-500">
-                    The Arctic Ocean freezes every winter and much of the
-                    sea-ice then thaws every summer, and that process will
-                    continue whatever happens.
+                    {crisis.description}
                   </Typography>
+                  <div className="flex justify-between mb-1">
+                  <span className="text-base font-medium text-blue-700 text-xs dark:text-black">Received:{crisis.recived_amount}</span>
+                  <span className="text-sm font-medium text-blue-700 text-xs dark:text-black">Goal:{crisis.donation_goal}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 relative">
+                <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${Math.round((crisis.recived_amount/crisis.donation_goal)*100)}%` }}></div>
+                <span className="text-sm text-black text-xs absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                {Math.round((crisis.recived_amount/crisis.donation_goal)*100)}%
+                </span>
+              </div>
+
+                <br/>
+                <div className="flex gap-4">
+                <div>
+                  <Button className="w-full">ReadMore</Button>
+                  </div>
                   <div>
-                  <Button className="w-full">Donate</Button>
+                  <Button className="w-full bg-green-500">Donate</Button>
+                  </div>
                   </div>
                 </CardBody>
               </Card>
-
-              <Card className="shadow-lg shadow-gray-500/10">
-                <CardHeader className="relative h-56">
-                  <img
-                    alt="Card Image"
-                    src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-                    className="h-full w-full"
-                  />
-                </CardHeader>
-                <CardBody>
-                  <Typography
-                    variant="h5"
-                    color="blue-gray"
-                    className="mb-3 font-bold"
-                  >
-                    Top Notch Services
-                  </Typography>
-                  <Typography className="font-normal text-blue-gray-500">
-                    The Arctic Ocean freezes every winter and much of the
-                    sea-ice then thaws every summer, and that process will
-                    continue whatever happens.
-                  </Typography>
-                </CardBody>
-              </Card>
-
-              <Card className="shadow-lg shadow-gray-500/10">
-                <CardHeader className="relative h-56">
-                  <img
-                    alt="Card Image"
-                    src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-                    className="h-full w-full"
-                  />
-                </CardHeader>
-                <CardBody>
-                  <Typography
-                    variant="h5"
-                    color="blue-gray"
-                    className="mb-3 font-bold"
-                  >
-                    Top Notch Services
-                  </Typography>
-                  <Typography className="font-normal text-blue-gray-500">
-                    The Arctic Ocean freezes every winter and much of the
-                    sea-ice then thaws every summer, and that process will
-                    continue whatever happens.
-                  </Typography>
-                </CardBody>
-              </Card>
-
-              <Card className="shadow-lg shadow-gray-500/10">
-                <CardHeader className="relative h-56">
-                  <img
-                    alt="Card Image"
-                    src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-                    className="h-full w-full"
-                  />
-                </CardHeader>
-                <CardBody>
-                  <Typography
-                    variant="h5"
-                    color="blue-gray"
-                    className="mb-3 font-bold"
-                  >
-                    Top Notch Services
-                  </Typography>
-                  <Typography className="font-normal text-blue-gray-500">
-                    The Arctic Ocean freezes every winter and much of the
-                    sea-ice then thaws every summer, and that process will
-                    continue whatever happens.
-                  </Typography>
-                </CardBody>
-              </Card>
-
-              <Card className="shadow-lg shadow-gray-500/10 pt-6 ">
-                <CardHeader className="relative h-56">
-                  <img
-                    alt="Card Image"
-                    src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-                    className="h-full w-full"
-                  />
-                </CardHeader>
-                <CardBody>
-                  <Typography
-                    variant="h5"
-                    color="blue-gray"
-                    className="mb-3 font-bold"
-                  >
-                    Top Notch Services
-                  </Typography>
-                  <Typography className="font-normal text-blue-gray-500">
-                    The Arctic Ocean freezes every winter and much of the
-                    sea-ice then thaws every summer, and that process will
-                    continue whatever happens.
-                  </Typography>
-                </CardBody>
-              </Card>
+                ))
+             ):(
+              <p>No crisis data available.</p>
+             )}
 
               
+              </div>
               </div>
       
       <div className="bg-blue-gray-50/50">

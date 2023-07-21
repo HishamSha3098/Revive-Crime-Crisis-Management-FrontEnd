@@ -23,6 +23,7 @@ import LoadingSpinner from "@/utils/loadingSpinner";
 
 export function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isForgetForm,setIsForgetForm] = useState(false)
   // const perror=false
   const initialValues = {
     email: "",
@@ -45,12 +46,18 @@ export function SignIn() {
     onSubmit: async (values, action) => {
       try {
         setIsLoading(true); // Start showing the spinner
-        const { data } = await axios.post('http://127.0.0.1:8000/login/', values);
+        const endpoint = isForgetForm ? 'http://127.0.0.1:8000/reset-password/' : 'http://127.0.0.1:8000/login/';
+        const { data } = await axios.post(endpoint, values);
         console.log(values);
         localStorage.setItem('user_id', data.user_id);
        
-        
-        if (data.message !== 'Success') {
+        if (data.message === 'mail send'){
+          toast.success("Reset Mail Send Successfully")
+          setIsForgetForm(false)
+          navigate('/login');
+        }
+
+        if (data.message !== 'Success' && 'mail send' ) {
           console.log(data.message);
           toast.error(data.message)
           
@@ -72,6 +79,15 @@ export function SignIn() {
   });
 
 
+ const ForgetPassword = ()=>{
+    setIsForgetForm(true)
+    
+
+
+ }
+
+
+
   return (
     <>
       <img
@@ -88,7 +104,47 @@ export function SignIn() {
       )}
 
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
+      {isForgetForm?(
       <div className="container mx-auto p-4">
+        <Card className="absolute top-2/4 left-2/4 w-full max-w-[24rem] -translate-y-2/4 -translate-x-2/4">
+          <CardHeader
+            variant="gradient"
+            color="blue"
+            className="mb-4 grid h-28 place-items-center"
+          >
+            <Typography variant="h3" color="white">
+              Forget Password
+            </Typography>
+          </CardHeader>
+          <form action="#" onSubmit={handleSubmit}>
+          <CardBody className="flex flex-col gap-4">
+          <Input
+            type="email" 
+            label="Email" 
+            size="lg"
+            id="email"
+            onBlur={handleBlur}
+            onChange={handleChange}
+            value={values.email} 
+            required
+             />
+              {errors.email && touched.email ? (
+                  <p className="text-red-500 text-sm">{errors.email}</p>
+                ) : null}
+
+           
+          </CardBody>
+          <CardFooter className="pt-0">
+            <Button type="submit" variant="gradient" fullWidth>
+              Send Verification Email
+            </Button>
+            
+           
+          </CardFooter>
+          </form>
+        </Card>
+      </div>):(
+        <div className="container mx-auto p-4">
         <Card className="absolute top-2/4 left-2/4 w-full max-w-[24rem] -translate-y-2/4 -translate-x-2/4">
           <CardHeader
             variant="gradient"
@@ -128,9 +184,9 @@ export function SignIn() {
             {errors.password && touched.password ? (
                   <p className="text-red-500 text-sm">{errors.password}</p>
                 ) : null}
-            <a className="-ml-0 text-blue-gray-400" href="" onClick={""}>
+            <button className="-ml-0 text-blue-gray-400" onClick={ForgetPassword}>
               Forget password
-            </a>
+            </button>
           </CardBody>
           <CardFooter className="pt-0">
             <Button type="submit" variant="gradient" fullWidth>
@@ -154,6 +210,7 @@ export function SignIn() {
           </form>
         </Card>
       </div>
+      )}
     </>
   );
 }
