@@ -36,6 +36,10 @@ export function CausesHome() {
    
   }
 
+  const handleReadMore = (crisis) => {
+    // Pass crisis.id as state while navigating
+    navigate('/Causes-view', { state: { id: crisis.id } });
+  };
 
   
 
@@ -94,7 +98,9 @@ Crisis.map((crisis,index)=>(
                     {crisis.title}
                   </Typography>
                   <Typography className="font-normal text-blue-gray-500">
-                    {crisis.description}
+                    {crisis.description.length > 50
+                      ? `${crisis.description.substring(0, 50)}...`
+                      : crisis.description}
                   </Typography>
                   <div className="flex justify-between mb-1">
                   <span className="text-base font-medium text-blue-700 text-xs dark:text-black">Received:{crisis.recived_amount}</span>
@@ -110,7 +116,7 @@ Crisis.map((crisis,index)=>(
                 <br/>
                 <div className="flex gap-4">
                 <div>
-                  <Button className="w-full">ReadMore</Button>
+                  <Button onClick={() => handleReadMore(crisis)} className="w-full">ReadMore</Button>
                   </div>
                   <div>
                   <Button className="w-full bg-green-500">Donate</Button>

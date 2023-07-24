@@ -22,6 +22,7 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "6.4.2",
+    "react-tooltip": "^5.18.1",
     "sweetalert2": "^11.7.18",
     "yup": "^1.2.0"
   },

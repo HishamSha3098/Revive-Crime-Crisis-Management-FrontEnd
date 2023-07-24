@@ -1,6 +1,7 @@
 
 import { Home, SignIn, SignUp, UserProfile,  } from "@/Home/pages";
 import CausesHome from "@/Home/pages/Causes";
+import CausesView from "@/Home/pages/Causes View";
 import Profile from "@/Home/pages/profile";
 import ComplexNavbar from "@/widgets/layout/navbar";
 import axios from "axios";
@@ -56,6 +57,7 @@ function HomeRoutes() {
         <Route path="/register" element={<SignUp/>}/>
         <Route path="/profile" element={<UserProfile/>}/>
         <Route path="/CausesHome" element={<CausesHome/>}/>
+        <Route path="/Causes-view" element={<CausesView/>}/>
         
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/" element={<Home/>}/>
