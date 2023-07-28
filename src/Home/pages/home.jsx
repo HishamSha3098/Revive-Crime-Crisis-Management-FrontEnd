@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -7,15 +7,89 @@ import {
   Button,
   IconButton,
   Input,
-  Textarea,
+  FormControl,
+  Select,
+  MenuItem,
+  Textarea
 } from "@material-tailwind/react";
 import { UsersIcon } from "@heroicons/react/24/solid";
 import { PageTitle, Footer, } from "@/Home/widgets/layout";
 import { FeatureCard, TeamCard } from "@/Home/widgets/cards";
 import { featuresData, teamData, contactData } from "@/Home/data";
 // import ComplexNavbar from "@/widgets/layout/navbar";
+// import { TextareaAutosize, FormControl, InputLabel, Select, MenuItem } from '@material-tailwind/react';
+import axios from 'axios';
+import { toast } from "react-hot-toast";
+import LoadingSpinner from "@/utils/loadingSpinner";
+
 
 export function Home() {
+
+  const [selectedOption, setSelectedOption] = useState('');
+  const [choices, setChoices] = useState([]);
+  const [email, setEmail] = useState('');
+  const [idCard, setIdCard] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const user_id = localStorage.getItem('user_id');
+
+
+  useEffect(() => {
+    fetchDepartment();
+  }, []);
+
+  const fetchDepartment = async () =>{
+    const response =await axios.get('http://127.0.0.1:8000/department/')
+    .then(response => {
+      console.log(response.data);
+      setChoices(response.data);
+    })
+    .catch(error => {
+      console.error('Error fetching choices:', error);
+    });
+
+   
+  }
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+    console.log(event.target.value, 'Selected option');
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handleIdCardChange = (event) => {
+    setIdCard(event.target.files[0]);
+  };
+
+  const handleSubmit = (event) => {
+    setIsLoading(true)
+    event.preventDefault();
+   
+    // Create form data to send to Django
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('id_card', idCard);
+    formData.append('sector', selectedOption);
+    console.log(email,'its selcted option sumbit mode');
+    axios.post('http://127.0.0.1:8000/Staff-apply/', formData) // Replace with your Django API endpoint to handle the form submission
+    .then(response => {
+      // Handle the response from Django, if needed
+      setIsLoading(false)
+      console.log(response.data);
+      if (response.data.message === 'success'){
+        toast.success("Application Submitted Successfully")
+      }else{
+        toast.error("Application failed")
+      }
+    })
+    .catch(error => {
+      console.error('Error submitting form:', error);
+    });
+};
+
+
   return (
     
     <>
@@ -24,6 +98,14 @@ export function Home() {
     <ComplexNavbar />
        
       </div> */}
+       {isLoading && (
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50 bg-gray-100 bg-opacity-50"
+          aria-hidden="true"
+        >
+          <LoadingSpinner/>
+        </div>
+      )}
       <div className="relative flex h-screen content-center items-center justify-center pt-16 pb-32">
         
         <div className="absolute top-0 h-full w-full bg-[url('https://images.unsplash.com/photo-1510472306330-201b18c210fc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8Mnx8fGVufDB8fHx8&w=1000&q=80')] bg-cover bg-center" />
@@ -87,7 +169,7 @@ export function Home() {
                 <CardHeader className="relative h-56">
                   <img
                     alt="Card Image"
-                    src="/img/teamwork.jpeg"
+                    src="https://cdn.pixabay.com/photo/2021/04/09/11/01/donation-6164135_640.png"
                     className="h-full w-full"
                   />
                 </CardHeader>
@@ -167,19 +249,37 @@ export function Home() {
               </Card>
             ))}
           </div>
-          <PageTitle heading="Want to work with us?">
-            Complete this form and we will get back to you in 24 hours.
+          {user_id ?
+          (<div>
+          <PageTitle heading="Want to Become a Sector Staff?">
+            Complete this form and we will get back to you(officials Only).
           </PageTitle>
-          <form className="mx-auto mt-12 max-w-3xl text-center">
-            <div className="mb-8 flex gap-8">
-              <Input variant="standard" size="lg" label="Full Name" />
-              <Input variant="standard" size="lg" label="Email Address" />
+          <form className="mx-auto mt-12 max-w-3xl text-center" onSubmit={handleSubmit}>
+            <div className="mb-8 grid lg:grid-cols-2 gap-8">
+              <Input variant="standard" type="email" size="lg" onChange={handleEmailChange} name="email" label="Email Address" />
+              <Input type="file" variant="standard" onChange={handleIdCardChange} size="lg" label="Upload Your Id Card" />
             </div>
-            <Textarea variant="standard" size="lg" label="Message" rows={8} />
-            <Button variant="gradient" size="lg" className="mt-8">
-              Send Message
+            
+      <select
+        value={selectedOption}
+        onChange={handleOptionChange}
+        
+        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+      >
+        <option value="">Choose Your Sector</option>
+        {choices.map(choice => (
+          <option key={choice.value} value={choice.value}>
+            {choice.name}
+          </option>
+        ))}
+      </select>
+      
+    
+            <Button variant="gradient" size="lg" type="submit" className="mt-8">
+              Apply for Staff
             </Button>
           </form>
+          </div>):null}
         </div>
       </section>
       <div className="bg-blue-gray-50/50">

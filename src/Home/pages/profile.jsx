@@ -142,6 +142,7 @@ export function UserProfile() {
         if (data.message === 'User Updated Successfully'){
           setIsLoading(false)
           toast.success("User Updated Successfully")
+          fetchUserData()
         }
       // Clear the form data and fetch the updated crisis list only on successful submission
       // setFormData({

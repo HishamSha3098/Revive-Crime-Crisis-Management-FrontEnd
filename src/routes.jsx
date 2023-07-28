@@ -17,6 +17,7 @@ import { SignIn, SignUp } from "@/pages/auth";
 import EventManagment from "./pages/dashboard/event";
 import GalleryManagment from "./pages/dashboard/Gallery";
 import Crisis from "./pages/dashboard/crisis";
+import StaffApplication from "./pages/dashboard/Staff-application";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -55,6 +56,12 @@ export const routes = [
         name: "Gallery Managment",
         path: "/gallery",
         element: <GalleryManagment />,
+      },
+      {
+        icon: <UsersIcon {...icon} />,
+        name: "Staff Applications",
+        path: "/Staff-application",
+        element: <StaffApplication />,
       },
     ],
   },

@@ -44,7 +44,7 @@ export function Crisis() {
   const [showModal2, setShowModal2] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [existingImage, setExistingImage] = useState('');
-
+  const navigate = useNavigate()
   const [crisisId, setCrisisId] = useState(null);
   const [crises, setCrises] = useState([]);
 
@@ -97,6 +97,11 @@ export function Crisis() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (formData.dropzone_file === null){
+        toast.error("Please Upload image before Submission")
+        return
+
+      }
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null) {
@@ -115,7 +120,7 @@ export function Crisis() {
       if (formData.id !== null) {
         
         // formData.document = crises.document
-      console.log(data);
+      console.log(data,'this is data for sending');
 
         // If the crisis has an ID, it means it already exists and we should update it
        const response = await axios.post(`http://127.0.0.1:8000/update_crisis/${formData.id}/`, data);
@@ -128,7 +133,7 @@ export function Crisis() {
 
        }
       } else {
-      console.log(data);
+      console.log(data,'this is data for sending');
       // If the crisis doesn't have an ID, it means it's a new crisis and we should add it
        const response = await axios.post('http://127.0.0.1:8000/add_crisis/', data);
         if (response.data.message == 'success'){
