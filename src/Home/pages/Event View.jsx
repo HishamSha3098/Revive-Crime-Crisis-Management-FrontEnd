@@ -21,7 +21,8 @@ import LoadingSpinner from "@/utils/loadingSpinner";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import axios from "axios";
-
+import GoogleMapPicker from "react-google-map-picker";
+import LocationMap from "@/utils/LocationMap";
 
 
 
@@ -58,6 +59,7 @@ export function EventView() {
       console.error('Error fetching data:', error);
     }
   };
+
 
   const data = [
     {
@@ -126,7 +128,8 @@ export function EventView() {
   };
 
   
-  
+  const lat = Event.lat
+  const lng = Event.lng
 
   return (
     
@@ -210,15 +213,9 @@ export function EventView() {
           {value === "location" ? (
             <>
               <p>{desc}</p>
-              <iframe
-  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15658.892269397213!2d75.95793524999999!3d11.133990749999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1690286490799!5m2!1sen!2sin"
-  width="100%"
-  height="450"
-  style={{ border: "0" }}
-  allowFullScreen=""
-  loading="lazy"
-  referrerPolicy="no-referrer-when-downgrade"
-></iframe>
+              <div>
+      <LocationMap lat={lat} lng={lng} />
+    </div>
             </>
           ) : (
             desc

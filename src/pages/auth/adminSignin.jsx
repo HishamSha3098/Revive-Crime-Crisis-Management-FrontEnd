@@ -48,7 +48,9 @@ export function AdminSignIn() {
         const { data } = await axios.post('http://127.0.0.1:8000/adminLogin/', values);
         console.log(values);
         localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('Staff_status', data.staff_status);
         // console.log(data.admin);
+        
         
         if (data.message !== 'Success') {
           console.log(data.message);

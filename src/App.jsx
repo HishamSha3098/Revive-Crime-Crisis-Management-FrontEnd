@@ -5,6 +5,8 @@ import { Toaster } from "react-hot-toast";
 import A from "./Home/pages/a";
 import AdminSignIn from "./pages/auth/adminSignin";
 import { CrisisPreview } from "./pages/dashboard/crisisPreview";
+
+
 // import HomeRoutes from "./HomeRoutes.jsx";
 // import { Navbar } from "./widgets/layout";
 
@@ -20,6 +22,7 @@ function App() {
       <Route path="/*" element={<HomeRoutes/>}/>
       <Route path="/auth/*" element={<Auth />} />
       <Route path="/manage/preview" element={<CrisisPreview />} />
+  
       {/* <Route path="*" element={<Navigate to="/homepage" replace />} /> */}
      
 

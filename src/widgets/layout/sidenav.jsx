@@ -35,7 +35,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
             variant="h6"
             color={sidenavType === "dark" ? "white" : "blue-gray"}
           >
-            {brandName}
+            Revive | Crime & Crisis
           </Typography>
         </Link>
         <IconButton

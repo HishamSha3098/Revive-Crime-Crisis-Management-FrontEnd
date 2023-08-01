@@ -13,7 +13,7 @@ import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
-
+import { ComplaintRegister } from "@/Home/pages/Complaint";
 
 
 
@@ -67,6 +67,8 @@ function HomeRoutes() {
         <Route path="/event-Home" element={<EventHome/>}/>
         <Route path="/Event-view" element={<EventView/>}/>
         <Route path="/Gallery-posts" element={<GalleryPost/>}/>
+        <Route path="/complaint" element={<ComplaintRegister />} />
+
 
         
         <Route path="*" element={<Navigate to="/" replace />} />

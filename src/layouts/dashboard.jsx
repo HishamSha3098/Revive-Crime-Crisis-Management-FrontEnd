@@ -11,6 +11,7 @@ import routes from "@/routes";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 
 export function Dashboard() {
+  
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
 

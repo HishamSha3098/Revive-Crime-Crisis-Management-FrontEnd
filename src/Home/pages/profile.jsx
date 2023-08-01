@@ -323,8 +323,9 @@ export function UserProfile() {
   name="marital_status"
   value={formData.marital_status}
   onChange={(e) => handleInputChange(e)}
-  className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"
->
+  className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"
+  
+><option value="">Choose Your Sector</option>
   <option value="married">Married</option>
   <option value="single">Single</option>
   <option value="widowed">Widowed</option>

@@ -43,7 +43,7 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <a href="/" className="flex items-center">
           Home
         </a>
       </Typography>
@@ -63,7 +63,7 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <a href="/CausesHome" className="flex items-center">
           Causes             
         </a>
       </Typography>
@@ -73,7 +73,7 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <a href="/event-Home" className="flex items-center">
           Events
         </a>
       </Typography>
@@ -93,7 +93,7 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <a href="/Gallery-posts" className="flex items-center">
           Gallery
         </a>
       </Typography>

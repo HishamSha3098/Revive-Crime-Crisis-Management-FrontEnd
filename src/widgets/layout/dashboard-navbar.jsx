@@ -46,6 +46,7 @@ export function DashboardNavbar() {
 
         console.log('Logged out successfully!');
         localStorage.removeItem('user_id')
+        localStorage.removeItem('Staff_status')
         toast.success("LogOut Successfull")
         navigate("/admin")
 
@@ -117,7 +118,7 @@ export function DashboardNavbar() {
               className="hidden items-center gap-1 px-4 xl:flex"
             >
               <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
-              Sign In
+              LogOut
             </Button>
             <IconButton
               variant="text"
