@@ -117,6 +117,9 @@ export function CausesView() {
         console.error("Error sharing the post:", error);
       }
     }; 
+
+    
+
     return (
       <div className="cursor-pointer" onClick={handleShare}>
       <ShareIcon className="h-6 w-6 text-blue-500" />
@@ -125,7 +128,10 @@ export function CausesView() {
   };
 
   
-  
+  const handleDonate = (crisis) => {
+    // Pass crisis.id as state while navigating
+    navigate('/Checkout', { state: { id: crisis.id } });
+  };
 
   return (
     
@@ -175,7 +181,7 @@ export function CausesView() {
       <br/>
       <div className="flex">
       <div className="mr-2">
-        <Button className="w-full bg-green-500">Donate</Button>
+        <Button onClick={() => handleDonate(Crisis)} className="w-full bg-green-500">Donate</Button>
       </div>
       <div className="flex items-center justify-center">
         <ShareButton postTitle={postTitle} postUrl={postUrl} />

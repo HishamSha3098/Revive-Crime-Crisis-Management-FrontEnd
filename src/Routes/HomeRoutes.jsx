@@ -14,6 +14,9 @@ import { toast } from "react-hot-toast";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 import { ComplaintRegister } from "@/Home/pages/Complaint";
+import Checkout from "@/Home/pages/Checkout";
+import PaymentSuccess from "@/Home/pages/CheckoutSuccessful";
+import PaymentFail from "@/Home/pages/paymentFailed";
 
 
 
@@ -68,6 +71,8 @@ function HomeRoutes() {
         <Route path="/Event-view" element={<EventView/>}/>
         <Route path="/Gallery-posts" element={<GalleryPost/>}/>
         <Route path="/complaint" element={<ComplaintRegister />} />
+        <Route path="/Checkout" element={<Checkout />} />
+        
 
 
         

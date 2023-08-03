@@ -12,6 +12,7 @@
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "2.0.12",
     "@material-tailwind/react": "1.2.4",
+    "@stripe/react-stripe-js": "^2.1.1",
     "apexcharts": "3.35.5",
     "axios": "^1.4.0",
     "formik": "^2.4.2",
