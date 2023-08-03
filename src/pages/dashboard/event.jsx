@@ -35,7 +35,7 @@ import axios from "axios";
 import { Formik,Form, useFormik } from "formik";
 import { toast } from "react-hot-toast";
 import Swal from 'sweetalert2';
-import MapPicker from 'react-google-map-picker'
+// import MapPicker from 'react-google-map-picker'
 
 
 export function Crisis() {
@@ -478,13 +478,13 @@ export function Crisis() {
 
       </div>
       <div className="w-full col-span-4 ">
-  <MapPicker col-span-2 defaultLocation={defaultLocation}
+  {/* <MapPicker col-span-2 defaultLocation={defaultLocation}
     zoom={zoom}
     mapTypeId="roadmap"
     style={{height:'200px'}}
     onChangeLocation={handleChangeLocation} 
     onChangeZoom={handleChangeZoom}
-    apiKey='AIzaSyD07E1VvpsN_0FvsmKAj4nK9GnLq-9jtj8'/>
+    apiKey='AIzaSyD07E1VvpsN_0FvsmKAj4nK9GnLq-9jtj8'/> */}
     </div>
    <br/>
     <div className="col-span-2 px-4">

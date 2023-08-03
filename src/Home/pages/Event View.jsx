@@ -21,7 +21,7 @@ import LoadingSpinner from "@/utils/loadingSpinner";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import axios from "axios";
-import GoogleMapPicker from "react-google-map-picker";
+// import GoogleMapPicker from "react-google-map-picker";
 import LocationMap from "@/utils/LocationMap";
 
 
