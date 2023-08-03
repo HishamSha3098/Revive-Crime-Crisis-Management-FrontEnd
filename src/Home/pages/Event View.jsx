@@ -21,16 +21,17 @@ import LoadingSpinner from "@/utils/loadingSpinner";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import axios from "axios";
+import GoogleMapPicker from "react-google-map-picker";
+import LocationMap from "@/utils/LocationMap";
 
 
 
 
 
-
-export function CausesView() {
+export function EventView() {
   const [isLoading, setIsLoading] = useState(false);
   const [progressvalue , setProgressValue] = useState({})
-  const [Crisis, setCrisis] = useState([]);
+  const [Event, setEvent] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const id = location.state?.id;
@@ -39,40 +40,42 @@ export function CausesView() {
   const postUrl = window.location.href;
 
   useEffect(() => {
-    fetchCrisis();
+    fetchEvents();
   }, []);
 
-  const fetchCrisis = async () =>{
+  const fetchEvents = async () =>{
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/Crisis-single/${id}/`);
+      console.log(id ,'its evnt is to backend');
+      const response = await axios.get(`http://127.0.0.1:8000/Event-single/${id}/`);
       console.log('API Response:', response.data);
   
       // Access the crisis data from the response
-      const crisisData = response.data;
-      console.log('Crisis Data:', crisisData);
+      const eventData = response.data;
+      console.log('Event Data:', eventData);
   
       // Assuming you have updated the 'Crisis' state accordingly, set it with the fetched data
-      setCrisis(crisisData);
+      setEvent(eventData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
+
   const data = [
     {
       label: "Description",
       value: "Description",
-      desc: Crisis.description,
+      desc: Event.description,
     },
     {
-      label: "Patient Status",
-      value: "status",
-      desc: Crisis.description,
+      label: "Place and Time",
+      value: "Place and Time",
+      desc: [ Event.place," ",Event.date_time],
     },
    
     {
-      label: "Download File",
-      value: "download",
+      label: "Location",
+      value: "location",
       desc: `Click the button below to download the file.`,
       downloadUrl: `http://127.0.0.1:8000/fileDownload/${id}/`, // Update this with your Django endpoint URL
     },
@@ -80,19 +83,19 @@ export function CausesView() {
 
   
 
-  const handleDownload = () => {
-    const fileDownloadUrl = data.find((item) => item.value === "download")?.downloadUrl;
-    if (fileDownloadUrl) {
-      axios.get(fileDownloadUrl, { responseType: "blob" }).then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "CrisisProof.pdf"); // Update the filename here if needed
-        document.body.appendChild(link);
-        link.click();
-      });
-    }
-  };
+  // const handleDownload = () => {
+  //   const fileDownloadUrl = data.find((item) => item.value === "download")?.downloadUrl;
+  //   if (fileDownloadUrl) {
+  //     axios.get(fileDownloadUrl, { responseType: "blob" }).then((response) => {
+  //       const url = window.URL.createObjectURL(new Blob([response.data]));
+  //       const link = document.createElement("a");
+  //       link.href = url;
+  //       link.setAttribute("download", "CrisisProof.pdf"); // Update the filename here if needed
+  //       document.body.appendChild(link);
+  //       link.click();
+  //     });
+  //   }
+  // };
 
 
 
@@ -117,9 +120,6 @@ export function CausesView() {
         console.error("Error sharing the post:", error);
       }
     }; 
-
-    
-
     return (
       <div className="cursor-pointer" onClick={handleShare}>
       <ShareIcon className="h-6 w-6 text-blue-500" />
@@ -128,10 +128,8 @@ export function CausesView() {
   };
 
   
-  const handleDonate = (crisis) => {
-    // Pass crisis.id as state while navigating
-    navigate('/Checkout', { state: { id: crisis.id } });
-  };
+  const lat = Event.lat
+  const lng = Event.lng
 
   return (
     
@@ -139,7 +137,7 @@ export function CausesView() {
 
 <section className="relative block h-[50vh]">
   <div
-    className="bg-profile-background absolute top-0 h-full w-full bg-[url('http://localhost:5173/public/img/banner-crisis.jpg')] bg-cover bg-center"
+    className="bg-profile-background absolute top-0 h-full w-full bg-[url('http://localhost:5173/public/img/banner-events.jpg')] bg-cover bg-center"
   />
 
   <div className="absolute top-0 h-full w-full bg-black/75" />
@@ -168,23 +166,23 @@ export function CausesView() {
         <div className="container mx-auto md:flex md:flex-row md:gap-4">
   {/* Image */}
   <div className="md:w-1/2 p-4">
-    <img src={`http://127.0.0.1:8000/${Crisis.image}`} alt="Crisis Image" />
+    <img src={`http://127.0.0.1:8000/${Event.image}`} alt="Crisis Image" />
   </div>
 
   {/* Description */}
   <div className="md:w-1/2 p-4">
     <div className="mb-4">
-      <h2 className="text-xl font-bold">{Crisis.title} </h2>
+      <h2 className="text-xl font-bold">{Event.title} </h2>
       <p>
         Lorem ipsum dolor sit amet Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quia sunt asperiores ab voluptate molestias? Fugiat est, culpa error totam voluptate id consectetur distinctio, vitae itaque in tempora animi voluptas repellat. consectetur, adipisicing elit. Ratione, ea? Asperiores nobis a dolores omnis dicta nam illum vero, iste modi suscipit, accusantium ducimus voluptates quibusdam tempore? Illum, tempore aspernatur? Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque dicta dignissimos quod ut tempore, eum totam, voluptas, debitis amet molestias quos iure. Vitae libero, dicta quam nesciunt provident est similique.
       </p>
       <br/>
       <div className="flex">
-      <div className="mr-2">
-        <Button onClick={() => handleDonate(Crisis)} className="w-full bg-green-500">Donate</Button>
-      </div>
-      <div className="flex items-center justify-center">
-        <ShareButton postTitle={postTitle} postUrl={postUrl} />
+      {/* <div className="mr-2">
+        <Button className="w-full bg-green-500">Donate</Button>
+      </div> */}
+      <div className="flex items-center justify-center"  >
+        <ShareButton  postTitle={postTitle} postUrl={postUrl} />&nbsp;&nbsp;Share this Event
       </div>
     </div>
   
@@ -212,10 +210,12 @@ export function CausesView() {
       >
         {data.map(({ value, desc }) => (
           <TabPanel key={value} value={value}>
-          {value === "download" ? (
+          {value === "location" ? (
             <>
               <p>{desc}</p>
-              <Button className="" onClick={handleDownload}>Download</Button>
+              <div>
+      <LocationMap lat={lat} lng={lng} />
+    </div>
             </>
           ) : (
             desc
@@ -236,4 +236,4 @@ export function CausesView() {
   );
 }
 
-export default CausesView;
+export default EventView;

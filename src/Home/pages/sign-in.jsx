@@ -46,10 +46,13 @@ export function SignIn() {
     onSubmit: async (values, action) => {
       try {
         setIsLoading(true); // Start showing the spinner
-        const endpoint = isForgetForm ? 'http://127.0.0.1:8000/reset-password/' : 'http://127.0.0.1:8000/login/';
+        console.log(values.email);
+        const endpoint = isForgetForm ? `http://127.0.0.1:8000/reset-password/${values.email}/` : 'http://127.0.0.1:8000/login/';
+        
         const { data } = await axios.post(endpoint, values);
         console.log(values);
         localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('Staff_status', data.staff_status);
        
         if (data.message === 'mail send'){
           toast.success("Reset Mail Send Successfully")

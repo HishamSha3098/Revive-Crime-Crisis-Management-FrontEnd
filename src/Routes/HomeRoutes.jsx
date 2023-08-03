@@ -2,6 +2,10 @@
 import { Home, SignIn, SignUp, UserProfile,  } from "@/Home/pages";
 import CausesHome from "@/Home/pages/Causes";
 import CausesView from "@/Home/pages/Causes View";
+import EventView from "@/Home/pages/Event View";
+import EventHome from "@/Home/pages/Events";
+import PasswordReset from "@/Home/pages/PasswordReset";
+import GalleryPost from "@/Home/pages/gallery";
 import Profile from "@/Home/pages/profile";
 import ComplexNavbar from "@/widgets/layout/navbar";
 import axios from "axios";
@@ -9,7 +13,10 @@ import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
-
+import { ComplaintRegister } from "@/Home/pages/Complaint";
+import Checkout from "@/Home/pages/Checkout";
+import PaymentSuccess from "@/Home/pages/CheckoutSuccessful";
+import PaymentFail from "@/Home/pages/paymentFailed";
 
 
 
@@ -55,9 +62,19 @@ function HomeRoutes() {
         
         <Route path="/login" element={<SignIn/>}/>
         <Route path="/register" element={<SignUp/>}/>
+        <Route path="/reset-pass/:userId" element={<PasswordReset/>}/>
+
         <Route path="/profile" element={<UserProfile/>}/>
         <Route path="/CausesHome" element={<CausesHome/>}/>
         <Route path="/Causes-view" element={<CausesView/>}/>
+        <Route path="/event-Home" element={<EventHome/>}/>
+        <Route path="/Event-view" element={<EventView/>}/>
+        <Route path="/Gallery-posts" element={<GalleryPost/>}/>
+        <Route path="/complaint" element={<ComplaintRegister />} />
+        <Route path="/Checkout" element={<Checkout />} />
+        
+
+
         
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/" element={<Home/>}/>

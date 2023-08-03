@@ -35,7 +35,7 @@ import axios from "axios";
 import { Formik,Form, useFormik } from "formik";
 import { toast } from "react-hot-toast";
 import Swal from 'sweetalert2';
-
+import MapPicker from 'react-google-map-picker'
 
 
 export function Crisis() {
@@ -54,6 +54,8 @@ export function Crisis() {
     image: null,
     Date_time: '',
     description: '',
+    lat:'',
+    long:''
   });
 
   useEffect(() => {
@@ -108,6 +110,7 @@ export function Crisis() {
 
 
   const handleFormSubmit = async (e) => {
+    console.log(formData, 'this is input we got');
     e.preventDefault();
   
     try {
@@ -116,6 +119,8 @@ export function Crisis() {
       formValues.append('place', formData.place);
       formValues.append('Date_time', formData.Date_time);
       formValues.append('description', formData.description);
+      formValues.append('latitude',location.lat)
+      formValues.append('longitude',location.lng)
       
   
       if (formData.image) {
@@ -124,7 +129,7 @@ export function Crisis() {
       
       if (formData.id) {
         // Update existing crisis
-        console.log(formData,'this is form data');
+        console.log(formValues.data,'this is form data');
         const response = await axios.put(`http://127.0.0.1:8000/eventManage/${formData.id}/`, formValues);
         if (response.data){
         setShowModal(false)
@@ -134,6 +139,9 @@ export function Crisis() {
         }
       } else {
         // Add new crisis
+        for (const [key, value] of formValues) {
+          console.log(`${key}: ${value}`);
+        }
         await axios.post('http://127.0.0.1:8000/event/', formValues);
         setShowModal(false)
 
@@ -197,6 +205,28 @@ export function Crisis() {
       await Swal.fire('Error', 'An error occurred while deleting the gallery.', 'error');
     }
   };
+
+  const DefaultLocation = { lat: 10, lng: 106};
+  const DefaultZoom = 10;
+  const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
+
+  const [location, setLocation] = useState(defaultLocation);
+  const [zoom, setZoom] = useState(DefaultZoom);
+
+  function handleChangeLocation (lat, lng){
+    setLocation({lat:lat, lng:lng});
+  }
+  
+  function handleChangeZoom (newZoom){
+    setZoom(newZoom);
+  }
+
+  function handleResetLocation(){
+    setDefaultLocation({ ... DefaultLocation});
+    setZoom(DefaultZoom);
+  }
+
+
 
   return (
     <>
@@ -262,7 +292,9 @@ export function Crisis() {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {event.description}
+                        {event.description.length > 50
+                      ? `${event.description.substring(0, 40)}...`
+                      : event.description}
                         </Typography>
                         
                       </td>
@@ -309,12 +341,12 @@ export function Crisis() {
 
       {showModal ? (
         // Modal Starts Here
-        <>
+        <div className="w-full h-full">
         
                 <form className="flex items-center justify-center w-full" onSubmit={handleFormSubmit}>
 
           <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none  focus:outline-none"
           >
 
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
@@ -428,12 +460,36 @@ export function Crisis() {
       className=''
     />
  </div>
+
+
+ <div className="w-full md:w-1/2 lg:w-1/4 px-4 py-0 h-10 mb-1 lg:mb-0">
+  <Input type='text' label="Latitute" id="lat" name="lat" value={location.lat} />
+  </div>
+  <div className="w-full md:w-1/2 lg:w-1/4 px-4 py-0 h-10 mb-1 lg:mb-0">
+  <Input type='text' label="Longitude" id="long" name="long" value={location.lng} />
+  </div>
+  <br/>
+  {/* <Input type='text' label="Zoom" value={zoom} /> */}
+ 
+
  
   </div>
-
+  
 
       </div>
-    
+      <div className="w-full col-span-4 ">
+  <MapPicker col-span-2 defaultLocation={defaultLocation}
+    zoom={zoom}
+    mapTypeId="roadmap"
+    style={{height:'200px'}}
+    onChangeLocation={handleChangeLocation} 
+    onChangeZoom={handleChangeZoom}
+    apiKey='AIzaSyD07E1VvpsN_0FvsmKAj4nK9GnLq-9jtj8'/>
+    </div>
+   <br/>
+    <div className="col-span-2 px-4">
+    <Button onClick={handleResetLocation}>Reset Location</Button>
+    </div>
                 </div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
@@ -457,9 +513,10 @@ export function Crisis() {
           </div>
           <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
           </form>
+          </div>
           
 
-        </>
+        
       ) : null}
 
      

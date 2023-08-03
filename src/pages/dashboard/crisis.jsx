@@ -22,6 +22,7 @@ import {
   ChatBubbleLeftEllipsisIcon,
   Cog6ToothIcon,
   PencilIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/solid";
 import { Link, useNavigate } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
@@ -35,6 +36,7 @@ import axios from "axios";
 import { Formik,Form, useFormik } from "formik";
 import { toast } from "react-hot-toast";
 import Swal from 'sweetalert2';
+import { API_URL } from "@/Config/config";
 
 
 
@@ -44,9 +46,11 @@ export function Crisis() {
   const [showModal2, setShowModal2] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [existingImage, setExistingImage] = useState('');
-
+  const navigate = useNavigate()
   const [crisisId, setCrisisId] = useState(null);
   const [crises, setCrises] = useState([]);
+  const [userCrises, setUserCrises] = useState([]);
+  
 
   const [formData, setFormData] = useState({
     id: null,
@@ -65,8 +69,11 @@ export function Crisis() {
 
   const fetchCrises = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/crisis_list/');
-      setCrises(response.data);
+      const response1 = await axios.get(`${API_URL}/crisis_list/`);
+      setCrises(response1.data);
+
+      const response2 = await axios.get(`${API_URL}/crisis_applications/`);
+      setUserCrises(response2.data);
       console.log(crises,'this incomig data');
     } catch (error) {
       console.error(error);
@@ -97,6 +104,11 @@ export function Crisis() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (formData.dropzone_file === null){
+        toast.error("Please Upload image before Submission")
+        return
+
+      }
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null) {
@@ -115,10 +127,10 @@ export function Crisis() {
       if (formData.id !== null) {
         
         // formData.document = crises.document
-      console.log(data);
+      console.log(data,'this is data for sending');
 
         // If the crisis has an ID, it means it already exists and we should update it
-       const response = await axios.post(`http://127.0.0.1:8000/update_crisis/${formData.id}/`, data);
+       const response = await axios.post(`${API_URL}/update_crisis/${formData.id}/`, data);
        if (response.data.message === 'success'){
         toast.success("Crisis Updated Successfully")
         setShowModal(false)
@@ -128,9 +140,9 @@ export function Crisis() {
 
        }
       } else {
-      console.log(data);
+      console.log(data,'this is data for sending');
       // If the crisis doesn't have an ID, it means it's a new crisis and we should add it
-       const response = await axios.post('http://127.0.0.1:8000/add_crisis/', data);
+       const response = await axios.post(`${API_URL}/add_crisis/`, data);
         if (response.data.message == 'success'){
           toast.success("Crisis Added Successfully")
           setShowModal(false)
@@ -173,7 +185,7 @@ export function Crisis() {
   
       if (confirmDelete.isConfirmed) {
         // User clicked "Yes, delete it!", proceed with the deletion
-        await axios.delete(`http://127.0.0.1:8000/delete_crisis/${crisisId}/`);
+        await axios.delete(`${API_URL}/delete_crisis/${crisisId}/`);
         await fetchCrises();
         
         // Show a success SweetAlert after the deletion
@@ -189,6 +201,51 @@ export function Crisis() {
     }
   };
 
+
+//userCrisis section
+
+  const handleDownload = async (CrisisId) => {
+    try {
+      const response = await axios.post(`${API_URL}/crisis_applications/`, {
+        CrisisId: CrisisId,
+      }, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `CrisisProof_${CrisisId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error("Error downloading complaint:", error);
+    }
+  };
+
+
+
+  const handleStatusChange = async (newStatus,id) => {
+    console.log(id);
+    try {
+        const response = await axios.put(`${API_URL}/crisis-approvel/${id}/`);
+
+    
+
+      if (response.data.message === 'success') {
+        
+        console.log("--------------successs--------------loded----------");
+        toast.success("Complaint Status updated Successfully")
+
+        // Do something after successful status update
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast.error("Error updating status")
+      // Handle error if status update fails
+    }
+  };
+    const statusOptions = ["Approve"];
 
   return (
     <>
@@ -237,7 +294,7 @@ export function Crisis() {
                     <tr key={crisis.id}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`http://127.0.0.1:8000/${crisis.img}`} alt={crisis.title} size="sm" />
+                          <Avatar src={`${API_URL}/${crisis.image}`} alt={crisis.title} size="sm" />
                           <div>
                             <Typography
                               variant="small"
@@ -277,7 +334,7 @@ export function Crisis() {
                           as="a"
                           href="#"
                           onClick={() => {
-                            setExistingImage(`http://127.0.0.1:8000/${crisis.img}`); // Set the existing image URL
+                            setExistingImage(`${API_URL}/${crisis.image}`); // Set the existing image URL
                             setFormData({ ...crisis, id: crisis.id });
                             setShowModal(true)
                           }}
@@ -299,6 +356,112 @@ export function Crisis() {
 
         </CardBody>
       </Card>
+
+      <br/>
+      <br/>
+      <br/>
+      <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
+        <CardBody className="p-4">
+          {/* <div className="mb-10 flex items-center justify-between gap-6"> */}
+         
+        <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
+          <Typography variant="h6" color="white">
+            Crisis Applications
+          </Typography>
+        </CardHeader>
+        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+          <table className="w-full min-w-[640px] table-auto">
+            <thead>
+              <tr>
+                {["Crisis", "User", "Document", "status", "Action"].map((el) => (
+                  <th
+                    key={el}
+                    className="border-b border-blue-gray-50 py-3 px-5 text-left"
+                  >
+                    <Typography
+                      variant="small"
+                      className="text-[11px] font-bold uppercase text-blue-gray-400"
+                    >
+                      {el}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {userCrises.map(
+                (table , key) => {
+                  const className = `py-3 px-5 ${
+                    key === authorsTableData.length - 1
+                      ? ""
+                      : "border-b border-blue-gray-50"
+                  }`;
+
+                  return (
+                    <tr key={name}>
+                      <td className={className}>
+                        <div className="flex items-center gap-4">
+                          <Avatar src={`${API_URL}/${table.image}`} alt={name} size="sm" />
+                          <div>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-semibold"
+                            >
+                              {name}
+                            </Typography>
+                            <Typography className="text-xs font-normal text-blue-gray-500">
+                              {table.title}
+                              {/* {table.description} */}
+                            </Typography>
+                          </div>
+                        </div>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {table.user}
+                        </Typography>
+                        
+                      </td>
+                      <td>
+                        <button onClick={() => handleDownload(table.id)}>
+                        <DocumentTextIcon className="w-6 h-6" />
+                        </button>
+                      </td>
+                      <td className={className}>
+                        <Chip
+                          variant="gradient"
+                          color={table.is_active !== true  ? "blue-gray" : "blue-gray"}
+                          value={table.is_active !== true  ? 'for Approvel' : 'for Approvel'}
+                          className="py-0.5 px-2 text-[11px] font-medium"
+                        />
+                      </td>
+                      <td>
+                      <select
+                        value={status}
+                        onChange={(e) => handleStatusChange(e.target.value,table.id)}
+                        className="bg-white border border-gray-300 rounded px-4 py-2"
+                      >
+                        <option value="">Choose</option>
+                        {statusOptions.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                     </td>
+                    </tr>
+                  );
+                }
+              )}
+            </tbody>
+          </table>
+        </CardBody>
+      
+
+        </CardBody>
+      </Card>
+
       {showModal ? (
         // Modal Starts Here
         <>

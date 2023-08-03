@@ -8,7 +8,7 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function ComplexNavbar() {
@@ -43,11 +43,11 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <Link to="/" className="flex items-center">
           Home
-        </a>
+        </Link>
       </Typography>
-      <Typography
+      {/* <Typography
         as="li"
         variant="small"
         color="white"
@@ -56,16 +56,16 @@ export default function ComplexNavbar() {
         <a href="#" className="flex items-center">
           About
         </a>
-      </Typography>
+      </Typography> */}
       <Typography
         as="li"
         variant="small"
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <Link to="/CausesHome" className="flex items-center">
           Causes             
-        </a>
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -73,9 +73,9 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <Link to="/event-Home" className="flex items-center">
           Events
-        </a>
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -83,9 +83,9 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <Link to="/complaint" className="flex items-center">
           Complaints
-        </a>
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -93,9 +93,9 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <Link to="/Gallery-posts" className="flex items-center">
           Gallery
-        </a>
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -103,13 +103,20 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <Link href="#" className="flex items-center">
           Contact Us
-        </a>
+        </Link>
       </Typography>
     </ul>
   );
  
+  const handleDonate = (crisis) => {
+    // Pass crisis.id as state while navigating
+    navigate('/Checkout');
+  };
+
+
+
   return (
     <Navbar
       className={`mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 ${
@@ -127,7 +134,7 @@ export default function ComplexNavbar() {
           <img src="public\img\reviviel ogo white.png" alt="Logo" className="h-10" />
         </Typography>
         <div className="hidden lg:block">{navList}</div>
-        <Button  size="sm" className="hidden bg-green-500 lg:inline-block">
+        <Button  size="sm" onClick={() => handleDonate()} className="hidden bg-green-500 lg:inline-block">
           <span>Donate Now</span>
         </Button>
 
@@ -172,7 +179,7 @@ export default function ComplexNavbar() {
       <MobileNav open={openNav}>
         <div className="container mx-auto">
           {navList}
-          <Button size="sm" fullWidth className="mb-2 bg-green-500">
+          <Button size="sm" onClick={() => handleDonate()} fullWidth className="mb-2 bg-green-500">
             <span>Donate Now</span>
           </Button>
           

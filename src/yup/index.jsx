@@ -30,4 +30,10 @@ export const signUpSchema = Yup.object({
   });
 
 
- 
+  export const resetPasswordSchema = Yup.object({
+    
+    password: Yup.string().min(4).required("Please enter password"),
+    confirm_password: Yup.string()
+      .required("Please confirm password")
+      .oneOf([Yup.ref('password'), null], "Password doesn't match"),
+  });

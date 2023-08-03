@@ -17,12 +17,17 @@ import { SignIn, SignUp } from "@/pages/auth";
 import EventManagment from "./pages/dashboard/event";
 import GalleryManagment from "./pages/dashboard/Gallery";
 import Crisis from "./pages/dashboard/crisis";
+import StaffApplication from "./pages/dashboard/Staff-application";
+import ComplaintsView from "./pages/dashboard/Complaints";
 
+
+const staff = localStorage.getItem("Staff_status") === "true"; // Assuming the localStorage value is a string "true" or "false"
+console.log(staff,'this is  staff staus --------------');
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
 
-export const routes = [
+const basicRoutes = [
   {
     layout: "dashboard",
     pages: [
@@ -58,6 +63,9 @@ export const routes = [
       },
     ],
   },
+];
+
+const staffRoutes = [
   {
     title: "Staff Section",
     layout: "dashboard",
@@ -65,8 +73,8 @@ export const routes = [
       {
         icon: <DocumentTextIcon {...icon} />,
         name: "Complaints Managment",
-        path: "/tables",
-        element: <GalleryManagment />,
+        path: "/complaint-view",
+        element: <ComplaintsView />,
       },
       {
         icon: <UsersIcon {...icon} />,
@@ -77,5 +85,7 @@ export const routes = [
     ],
   },
 ];
+
+const routes = staff ?  staffRoutes :[...basicRoutes, ...staffRoutes] ;
 
 export default routes;
