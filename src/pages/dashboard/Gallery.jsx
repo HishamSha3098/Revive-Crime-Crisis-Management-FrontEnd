@@ -35,6 +35,7 @@ import axios from "axios";
 import { Formik,Form, useFormik } from "formik";
 import { toast } from "react-hot-toast";
 import Swal from 'sweetalert2';
+import { API_URL } from "@/Config/config";
 
 
 
@@ -58,7 +59,7 @@ export function Gallery() {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/gallery/');
+      const response = await axios.get(`${API_URL}/gallery/`);
       setGallery(response.data);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -110,7 +111,7 @@ export function Gallery() {
 
       if (formData.id) {
         // Update existing event
-       const response = await axios.put(`http://127.0.0.1:8000/galleryManage/${formData.id}/`, formValues);
+       const response = await axios.put(`${API_URL}/galleryManage/${formData.id}/`, formValues);
        
           toast.success("Post Updated Successfully")
           setShowModal(false)
@@ -121,7 +122,7 @@ export function Gallery() {
        else {
         console.log(formData,'this is create formdtaa');
         // Add a new event
-        await axios.post('http://127.0.0.1:8000/gallery/', formValues);
+        await axios.post(`${API_URL}/gallery/`, formValues);
       }
 
       // Clear the form data and fetch the updated event list only on successful submission
@@ -162,7 +163,7 @@ export function Gallery() {
   
       if (confirmDelete.isConfirmed) {
         // User clicked "Yes, delete it!", proceed with the deletion
-        await axios.delete(`http://127.0.0.1:8000/galleryManage/${id}/`);
+        await axios.delete(`${API_URL}/galleryManage/${id}/`);
         await fetchEvents();
         
         // Show a success SweetAlert after the deletion
@@ -258,7 +259,7 @@ export function Gallery() {
                           as="a"
                           href="#"
                           onClick={() => {
-                            setExistingImage(`http://127.0.0.1:8000/${gal.image}`); // Set the existing image URL
+                            setExistingImage(`${API_URL}/${gal.image}`); // Set the existing image URL
                             setFormData({ ...gal, id: gal.id });
                             setShowModal(true)
                           }}

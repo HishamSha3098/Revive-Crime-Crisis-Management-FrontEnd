@@ -19,6 +19,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "@/Config/config";
 
 export function ComplaintRegister() {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +37,7 @@ export function ComplaintRegister() {
   }, []);
 
   const fetchDepartment = async () => {
-    const response = await axios.get('http://127.0.0.1:8000/department/')
+    const response = await axios.get(`${API_URL}/department/`)
       .then(response => {
         console.log(response.data);
         setChoices(response.data);
@@ -73,7 +74,7 @@ for (let pair of formData.entries()) {
 }
    
     // Make the POST request using axios
-    axios.post('http://127.0.0.1:8000/register_complaint/', formData)
+    axios.post(`${API_URL}/register_complaint/`, formData)
       .then((response) => {
         toast.success("Complaint registered successfully")
         console.log('Complaint registered successfully:', response.data);

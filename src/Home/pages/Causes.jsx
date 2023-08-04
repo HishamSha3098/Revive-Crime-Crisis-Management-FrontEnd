@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { API_URL } from "@/Config/config";
 
 
 
@@ -43,7 +44,7 @@ export function CausesHome() {
   }, []);
 
   const fetchCrisis = async () =>{
-    const response =await axios.get('http://127.0.0.1:8000/crisis_list/')
+    const response =await axios.get(`${API_URL}/crisis_list/`)
     setCrisis(response.data)
 
    
@@ -108,7 +109,7 @@ export function CausesHome() {
       console.log(data,'this is data for sending');
       data.append('user_side', user_id);
       // If the crisis doesn't have an ID, it means it's a new crisis and we should add it
-       const response = await axios.post('http://127.0.0.1:8000/add_crisis/', data);
+       const response = await axios.post(`${API_URL}/add_crisis/`, data);
         if (response.data.message == 'success'){
           toast.success("Crisis Submitted Successfully")
           setShowModal(false)
@@ -185,7 +186,7 @@ Crisis.map((crisis,index)=>(
                 <CardHeader className="relative h-56">
                   <img
                     alt="Card Image"
-                    src={`http://127.0.0.1:8000/${crisis.image}`}
+                    src={`${API_URL}/${crisis.image}`}
                     className="h-full w-full"
                   />
                 </CardHeader>

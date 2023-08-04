@@ -34,6 +34,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Swal from 'sweetalert2';
+import { API_URL } from "@/Config/config";
 
 
 
@@ -47,7 +48,7 @@ export function ComplaintsView() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/complaints/")
+      const response = await axios.get(`${API_URL}/complaints/`)
       setTableData(response.data);
       console.log(response.data,'this is data from back--------');
     } catch (error) {
@@ -58,7 +59,7 @@ export function ComplaintsView() {
   
   const handleDownload = async (complaintId) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/complaints/", {
+      const response = await axios.post(`${API_URL}/complaints/`, {
         complaint_id: complaintId,
       }, {
         responseType: "blob",
@@ -80,7 +81,7 @@ export function ComplaintsView() {
   const handleStatusChange = async (newStatus,id) => {
     console.log(id);
     try {
-        const response = await axios.put(`http://127.0.0.1:8000/complaint/${id}/`,{
+        const response = await axios.put(`${API_URL}/complaint/${id}/`,{
           status: newStatus,
           
         
@@ -147,7 +148,7 @@ export function ComplaintsView() {
                     <tr key={name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`http://127.0.0.1:8000/${table.image}`} alt={name} size="sm" />
+                          <Avatar src={`${API_URL}/${table.image}`} alt={name} size="sm" />
                           <div>
                             <Typography
                               variant="small"

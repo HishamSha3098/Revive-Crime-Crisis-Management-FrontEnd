@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 // import LoadingSpinner from '../../utils';
 import toast, { Toaster } from 'react-hot-toast';
 import LoadingSpinner from "@/utils/loadingSpinner";
+import { API_URL } from "@/Config/config";
 
 
 
@@ -47,7 +48,7 @@ export function SignIn() {
       try {
         setIsLoading(true); // Start showing the spinner
         console.log(values.email);
-        const endpoint = isForgetForm ? `http://127.0.0.1:8000/reset-password/${values.email}/` : 'http://127.0.0.1:8000/login/';
+        const endpoint = isForgetForm ? `${API_URL}/reset-password/${values.email}/` : `${API_URL}/login/`;
         
         const { data } = await axios.post(endpoint, values);
         console.log(values);

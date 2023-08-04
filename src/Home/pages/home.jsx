@@ -21,6 +21,7 @@ import { featuresData, teamData, contactData } from "@/Home/data";
 import axios from 'axios';
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "@/utils/loadingSpinner";
+import { API_URL } from "@/Config/config";
 
 
 export function Home() {
@@ -38,7 +39,7 @@ export function Home() {
   }, []);
 
   const fetchDepartment = async () =>{
-    const response =await axios.get('http://127.0.0.1:8000/department/')
+    const response =await axios.get(`${API_URL}/department/`)
     .then(response => {
       console.log(response.data);
       setChoices(response.data);
@@ -73,7 +74,7 @@ export function Home() {
     formData.append('id_card', idCard);
     formData.append('sector', selectedOption);
     console.log(email,'its selcted option sumbit mode');
-    axios.post('http://127.0.0.1:8000/Staff-apply/', formData) // Replace with your Django API endpoint to handle the form submission
+    axios.post(`${API_URL}/Staff-apply/`, formData) // Replace with your Django API endpoint to handle the form submission
     .then(response => {
       // Handle the response from Django, if needed
       setIsLoading(false)

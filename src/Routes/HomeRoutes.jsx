@@ -25,7 +25,7 @@ function HomeRoutes() {
   const navigate = useNavigate();
   const user_id = localStorage.getItem('user_id')
   const handleLogout = () => {
-    axios.post('http://127.0.0.1:8000/logout/')
+    axios.post(`${API_URL}/logout/`)
       .then(response => {
         // Handle successful logout
         Cookies.remove("access_token")

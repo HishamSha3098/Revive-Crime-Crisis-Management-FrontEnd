@@ -36,6 +36,7 @@ import { Formik,Form, useFormik } from "formik";
 import { toast } from "react-hot-toast";
 import Swal from 'sweetalert2';
 import LocationPicker from "./LocationPicker";
+import { API_URL } from "@/Config/config";
 // import MapPicker from 'react-google-map-picker'
 
 
@@ -68,7 +69,7 @@ export function Crisis() {
 
  const fetchEvents = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/event/');
+      const response = await axios.get(`${API_URL}/event/`);
       setEvents(response.data);
       
     } catch (error) {
@@ -134,7 +135,7 @@ export function Crisis() {
       if (formData.id) {
         // Update existing crisis
         console.log(formValues.data,'this is form data');
-        const response = await axios.put(`http://127.0.0.1:8000/eventManage/${formData.id}/`, formValues);
+        const response = await axios.put(`${API_URL}/eventManage/${formData.id}/`, formValues);
         if (response.data){
         setShowModal(false)
         toast.success("Event Updated Successfully")}
@@ -146,7 +147,7 @@ export function Crisis() {
         for (const [key, value] of formValues) {
           console.log(`${key}: ${value}`);
         }
-        await axios.post('http://127.0.0.1:8000/event/', formValues);
+        await axios.post(`${API_URL}/event/`, formValues);
         setShowModal(false)
 
       }
@@ -194,7 +195,7 @@ export function Crisis() {
   
       if (confirmDelete.isConfirmed) {
         // User clicked "Yes, delete it!", proceed with the deletion
-        await axios.delete(`http://127.0.0.1:8000/eventManage/${id}/`);
+        await axios.delete(`${API_URL}/eventManage/${id}/`);
         await fetchEvents();
         
         // Show a success SweetAlert after the deletion
@@ -210,90 +211,7 @@ export function Crisis() {
     }
   };
 
- // location map section starta
-
-//  const [longval, setLongval] = useState(120.994260);
-//  const [latval, setLatval] = useState(14.593999);
-
-//  const mapRef = React.useRef();
-//  let marker = null;
-//  let infoWindow = null;
-
-//  const loadGoogleMapsScript = (callback) => {
-//    if (!window.google || !window.google.maps) {
-//      const script = document.createElement("script");
-//      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCPvqKJigbPJWjWpPcHXQ-c5TxuHTXQaRM&libraries=places`;
-//      script.onload = () => {
-//        if (callback) callback();
-//      };
-//      document.body.appendChild(script);
-//    } else {
-//      if (callback) callback();
-//    }
-//  };
-
-//  const initializeMap = () => {
-//    const curpoint = new window.google.maps.LatLng(latval, longval);
-
-//    const mapOptions = {
-//      center: curpoint,
-//      zoom: 10,
-//      mapTypeId: 'roadmap'
-//    };
-
-//    const map = new window.google.maps.Map(mapRef.current, mapOptions);
-
-//    marker = new window.google.maps.Marker({
-//      map: map,
-//      position: curpoint
-//    });
-
-//    infoWindow = new window.google.maps.InfoWindow();
-
-//    map.addListener('click', handleMapClick);
-//    marker.addListener('click', handleMarkerClick);
-
-//    updateInfoWindow();
-//  };
-
-//  const handleMapClick = (event) => {
-//    const newLongval = event.latLng.lng().toFixed(6);
-//    const newLatval = event.latLng.lat().toFixed(6);
-
-//    setLongval(newLongval);
-//    setLatval(newLatval);
-//  };
-
-//  const handleMarkerClick = () => {
-//    updateInfoWindow();
-//    infoWindow.open(marker.getMap(), marker);
-//  };
-
-//  const updateMapMarker = () => {
-//    const curpoint = new window.google.maps.LatLng(latval, longval);
-
-//    marker.setPosition(curpoint);
-//    marker.getMap().setCenter(curpoint);
-
-//    updateInfoWindow();
-//  };
-
-//  const updateInfoWindow = () => {
-//    const content = `Longitude: ${longval}<br>Latitude: ${latval}`;
-//    infoWindow.setContent(content);
-//  };
-
-//  // const handleJumpToLocation = () => {
-//  //   updateMapMarker();
-//  // };
-
-//  useEffect(() => {
-//   fetchEvents()
-//    loadGoogleMapsScript(() => {
-//      initializeMap();
-//    });
-//  }, [latval, longval]);
-
+ 
 const handleLocationChange = (newLatval, newLongval) => {
   setLatval(newLatval);
   setLongval(newLongval);
@@ -385,7 +303,7 @@ const handleLocationChange = (newLatval, newLongval) => {
                           as="a"
                           href="#"
                           onClick={() => {
-                            setExistingImage(`http://127.0.0.1:8000/${event.img}`); // Set the existing image URL
+                            setExistingImage(`${API_URL}/${event.img}`); // Set the existing image URL
                             setFormData({ ...event, id: event.id });
                             setShowModal(true)
                           }}

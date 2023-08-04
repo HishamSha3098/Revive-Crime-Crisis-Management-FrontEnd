@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 import toast, { Toaster } from 'react-hot-toast';
 import LoadingSpinner from "@/utils/loadingSpinner";
+import { API_URL } from "@/Config/config";
 
 
 export function SignUp() {
@@ -46,7 +47,7 @@ export function SignUp() {
       setIsLoading(true); // Start showing the spinner
       try {
         const { data } = await axios.post(
-          'http://127.0.0.1:8000/signup/',
+          `${API_URL}/signup/`,
           values
         );
         console.log(data);

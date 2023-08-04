@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { ProfileSchema } from "@/yup";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { API_URL } from "@/Config/config";
 
 
 
@@ -51,7 +52,7 @@ export function UserProfile() {
 
  const fetchUserData = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/user_data/${user_id}/`);
+      const response = await axios.get(`${API_URL}/user_data/${user_id}/`);
       setUserdata(response.data);
       
       setFormData({
@@ -137,7 +138,7 @@ export function UserProfile() {
       
         // Update existing crisis
         console.log(formValues);
-        const {data} = await axios.put(`http://127.0.0.1:8000/updateuser/${formData.id}/`, formValues);
+        const {data} = await axios.put(`${API_URL}/updateuser/${formData.id}/`, formValues);
         
         if (data.message === 'User Updated Successfully'){
           setIsLoading(false)

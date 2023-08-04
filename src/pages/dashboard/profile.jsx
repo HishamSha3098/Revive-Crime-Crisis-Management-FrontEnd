@@ -31,6 +31,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Swal from 'sweetalert2';
+import { API_URL } from "@/Config/config";
 
 
 
@@ -67,7 +68,7 @@ export function Profile() {
         try {
           console.log(email, 'this is params email');
           // Perform the block/unblock action based on the current state
-          const active = await axios.post('http://127.0.0.1:8000/user_manage/', {
+          const active = await axios.post(`${API_URL}/user_manage/`, {
             email: email,
           });
       
@@ -143,7 +144,7 @@ export function Profile() {
                     <tr key={name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`http://127.0.0.1:8000/${img}`} alt={name} size="sm" />
+                          <Avatar src={`${API_URL}/${img}`} alt={name} size="sm" />
                           <div>
                             <Typography
                               variant="small"

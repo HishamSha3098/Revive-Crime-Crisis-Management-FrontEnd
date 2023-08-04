@@ -23,6 +23,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 // import GoogleMapPicker from "react-google-map-picker";
 import LocationMap from "@/utils/LocationMap";
+import { API_URL } from "@/Config/config";
 
 
 
@@ -46,7 +47,7 @@ export function EventView() {
   const fetchEvents = async () =>{
     try {
       console.log(id ,'its evnt is to backend');
-      const response = await axios.get(`http://127.0.0.1:8000/Event-single/${id}/`);
+      const response = await axios.get(`${API_URL}/Event-single/${id}/`);
       console.log('API Response:', response.data);
   
       // Access the crisis data from the response
@@ -77,7 +78,7 @@ export function EventView() {
       label: "Location",
       value: "location",
       desc: `Click the button below to download the file.`,
-      downloadUrl: `http://127.0.0.1:8000/fileDownload/${id}/`, // Update this with your Django endpoint URL
+      downloadUrl: `${API_URL}/fileDownload/${id}/`, // Update this with your Django endpoint URL
     },
   ];
 
@@ -137,7 +138,7 @@ export function EventView() {
 
 <section className="relative block h-[50vh]">
   <div
-    className="bg-profile-background absolute top-0 h-full w-full bg-[url('http://localhost:5173/public/img/banner-events.jpg')] bg-cover bg-center"
+    className="bg-profile-background absolute top-0 h-full w-full bg-[url('https://revive-crime-crisis-management-front-end-oiwj.vercel.app/public/img/banner-events.jpg')] bg-cover bg-center"
   />
 
   <div className="absolute top-0 h-full w-full bg-black/75" />
@@ -166,7 +167,7 @@ export function EventView() {
         <div className="container mx-auto md:flex md:flex-row md:gap-4">
   {/* Image */}
   <div className="md:w-1/2 p-4">
-    <img src={`http://127.0.0.1:8000/${Event.image}`} alt="Crisis Image" />
+    <img src={`${API_URL}/${Event.image}`} alt="Crisis Image" />
   </div>
 
   {/* Description */}

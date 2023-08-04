@@ -31,6 +31,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Swal from 'sweetalert2';
+import { API_URL } from "@/Config/config";
 
 
 
@@ -39,7 +40,7 @@ export function StaffApplication() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/staff-application/")
+      const response = await axios.get(`${API_URL}/staff-application/`)
       setTableData(response.data);
       console.log(response.data,'this is data from back--------');
     } catch (error) {
@@ -54,7 +55,7 @@ export function StaffApplication() {
     const handleApprovel =async (email)=>{
 
       try {
-        const response = await axios.put(`http://127.0.0.1:8000/make-staff/${email}`)
+        const response = await axios.put(`${API_URL}/make-staff/${email}`)
         
         console.log(response.data,'this is data from back--------');
         toast.success("Approvel Success")
@@ -113,7 +114,7 @@ export function StaffApplication() {
                     <tr key={name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`http://127.0.0.1:8000/${table.image}`} alt={name} size="sm" />
+                          <Avatar src={`${API_URL}/${table.image}`} alt={name} size="sm" />
                           <div>
                             <Typography
                               variant="small"

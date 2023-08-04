@@ -21,6 +21,7 @@ import LoadingSpinner from "@/utils/loadingSpinner";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import axios from "axios";
+import { API_URL } from "@/Config/config";
 
 
 
@@ -44,7 +45,7 @@ export function CausesView() {
 
   const fetchCrisis = async () =>{
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/Crisis-single/${id}/`);
+      const response = await axios.get(`${API_URL}/Crisis-single/${id}/`);
       console.log('API Response:', response.data);
   
       // Access the crisis data from the response
@@ -74,7 +75,7 @@ export function CausesView() {
       label: "Download File",
       value: "download",
       desc: `Click the button below to download the file.`,
-      downloadUrl: `http://127.0.0.1:8000/fileDownload/${id}/`, // Update this with your Django endpoint URL
+      downloadUrl: `${API_URL}/fileDownload/${id}/`, // Update this with your Django endpoint URL
     },
   ];
 
@@ -168,7 +169,7 @@ export function CausesView() {
         <div className="container mx-auto md:flex md:flex-row md:gap-4">
   {/* Image */}
   <div className="md:w-1/2 p-4">
-    <img src={`http://127.0.0.1:8000/${Crisis.image}`} alt="Crisis Image" />
+    <img src={`${API_URL}/${Crisis.image}`} alt="Crisis Image" />
   </div>
 
   {/* Description */}

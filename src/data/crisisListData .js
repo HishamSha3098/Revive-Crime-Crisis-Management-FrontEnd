@@ -1,9 +1,10 @@
+import { API_URL } from "@/Config/config";
 import axios from "axios";
 
 async function CrisisTableData() {
   try {
     // Make an API request to Django to fetch the user data
-    const response = await axios.get("http://127.0.0.1:8000/crisis_list/");
+    const response = await axios.get(`${API_URL}/crisis_list/`);
     const data = response.data;
     console.log(data);
 

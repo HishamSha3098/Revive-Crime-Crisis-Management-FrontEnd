@@ -13,6 +13,7 @@ import LoadingSpinner from "@/utils/loadingSpinner";
 import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
+import { API_URL } from "@/Config/config";
 
 
 
@@ -30,7 +31,7 @@ export function EventHome() {
   }, []);
 
   const fetchCrisis = async () =>{
-    const response =await axios.get('http://127.0.0.1:8000/event/')
+    const response =await axios.get(`${API_URL}/event/`)
     setEvents(response.data)
 
    
@@ -54,7 +55,7 @@ export function EventHome() {
     <>
 
       <section className="relative block h-[50vh]">
-        <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('http://localhost:5173/public/img/banner-events.jpg')] bg-cover bg-center" />
+        <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('https://revive-crime-crisis-management-front-end-oiwj.vercel.app/public/img/banner-events.jpg')] bg-cover bg-center" />
 
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
 

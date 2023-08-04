@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 import toast, { Toaster } from 'react-hot-toast';
 import LoadingSpinner from "@/utils/loadingSpinner";
+import { API_URL } from "@/Config/config";
 
 
 export function PasswordReset() {
@@ -49,7 +50,7 @@ export function PasswordReset() {
         console.log(values,'-------------this values------');
 
         const { data } = await axios.put(
-          `http://127.0.0.1:8000/passwordChange/${userId}/`,
+          `${API_URL}/passwordChange/${userId}/`,
           values
         );
         console.log(data);
