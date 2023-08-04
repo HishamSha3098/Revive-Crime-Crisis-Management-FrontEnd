@@ -148,7 +148,7 @@ export function ComplaintsView() {
                     <tr key={name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`${API_URL}/${table.image}`} alt={name} size="sm" />
+                          <Avatar src={table.image} alt={name} size="sm" />
                           <div>
                             <Typography
                               variant="small"

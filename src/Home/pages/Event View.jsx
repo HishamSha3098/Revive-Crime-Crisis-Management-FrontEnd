@@ -167,7 +167,7 @@ export function EventView() {
         <div className="container mx-auto md:flex md:flex-row md:gap-4">
   {/* Image */}
   <div className="md:w-1/2 p-4">
-    <img src={`${API_URL}${Event.image}`} alt="Crisis Image" />
+    <img src={Event.image} alt="Crisis Image" />
   </div>
 
   {/* Description */}

@@ -19,6 +19,8 @@ function App() {
    
 
     <Routes>
+    <Route path="/login" element={<SignIn/>}/>
+
       <Route path="/admin" element={<AdminSignIn />} />
       {/* <Route path="/a" element={<A/>}/> */}
       <Route path="/dashboard/*" element={<Dashboard />} />

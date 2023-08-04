@@ -64,7 +64,7 @@ function HomeRoutes() {
 
       <Routes>
         
-        <Route path="/login" element={<SignIn/>}/>
+        {/* <Route path="/login" element={<SignIn/>}/> */}
         <Route path="/register" element={<SignUp/>}/>
         <Route path="/reset-pass/:userId" element={<PasswordReset/>}/>
 

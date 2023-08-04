@@ -294,7 +294,7 @@ export function Crisis() {
                     <tr key={crisis.id}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`${API_URL}/${crisis.image}`} alt={crisis.title} size="sm" />
+                          <Avatar src={crisis.image} alt={crisis.title} size="sm" />
                           <div>
                             <Typography
                               variant="small"
@@ -401,7 +401,7 @@ export function Crisis() {
                     <tr key={name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={`${API_URL}/${table.image}`} alt={name} size="sm" />
+                          <Avatar src={table.image} alt={name} size="sm" />
                           <div>
                             <Typography
                               variant="small"
