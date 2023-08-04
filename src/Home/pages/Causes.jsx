@@ -186,7 +186,11 @@ Crisis.map((crisis,index)=>(
                 <CardHeader className="relative h-56">
                   <img
                     alt="Card Image"
+<<<<<<< HEAD
                     src={crisis.image}
+=======
+                    src={`${API_URL}${crisis.image}`}
+>>>>>>> bad21951f11f1b81cf065c2d7b966039891530af
                     className="h-full w-full"
                   />
                 </CardHeader>
