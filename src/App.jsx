@@ -7,6 +7,7 @@ import AdminSignIn from "./pages/auth/adminSignin";
 import { CrisisPreview } from "./pages/dashboard/crisisPreview";
 import PaymentSuccess from "./Home/pages/CheckoutSuccessful";
 import PaymentFail from "./Home/pages/paymentFailed";
+import LocationPicker from "./pages/dashboard/LocationPicker";
 
 
 // import HomeRoutes from "./HomeRoutes.jsx";
@@ -29,6 +30,7 @@ function App() {
      
       <Route path="/Payment-success" element={<PaymentSuccess />} />
       <Route path="/Payment-failed" element={<PaymentFail />} />
+      <Route path="/sample" element={<LocationPicker />} />
      
     </Routes>
    

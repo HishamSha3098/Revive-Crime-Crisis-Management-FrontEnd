@@ -29,22 +29,25 @@ import { platformSettingsData, conversationsData, projectsData } from "@/data";
 // import { Input } from 'formik';
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import authorsTableData from "@/data/UserListData";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CrisisTableData from "@/data/crisisListData ";
 import axios from "axios";
 import { Formik,Form, useFormik } from "formik";
 import { toast } from "react-hot-toast";
 import Swal from 'sweetalert2';
+import LocationPicker from "./LocationPicker";
 // import MapPicker from 'react-google-map-picker'
 
 
 export function Crisis() {
+  const [longval, setLongval] = useState(120.994260);
+  const [latval, setLatval] = useState(14.593999);
   const [tableData, setTableData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   // const [showModal2, setShowModal2] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [existingImage, setExistingImage] = useState('');
-
+  
   // const [crisisId, setCrisisId] = useState(null);
   const [events, setEvents] = useState([]);
   const [formData, setFormData] = useState({
@@ -60,6 +63,7 @@ export function Crisis() {
 
   useEffect(() => {
     fetchEvents();
+    
   }, []);
 
  const fetchEvents = async () => {
@@ -119,8 +123,8 @@ export function Crisis() {
       formValues.append('place', formData.place);
       formValues.append('Date_time', formData.Date_time);
       formValues.append('description', formData.description);
-      formValues.append('latitude',location.lat)
-      formValues.append('longitude',location.lng)
+      formValues.append('latitude',latval)
+      formValues.append('longitude',longval)
       
   
       if (formData.image) {
@@ -206,27 +210,94 @@ export function Crisis() {
     }
   };
 
-  const DefaultLocation = { lat: 10, lng: 106};
-  const DefaultZoom = 10;
-  const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
+ // location map section starta
 
-  const [location, setLocation] = useState(defaultLocation);
-  const [zoom, setZoom] = useState(DefaultZoom);
+//  const [longval, setLongval] = useState(120.994260);
+//  const [latval, setLatval] = useState(14.593999);
 
-  function handleChangeLocation (lat, lng){
-    setLocation({lat:lat, lng:lng});
-  }
-  
-  function handleChangeZoom (newZoom){
-    setZoom(newZoom);
-  }
+//  const mapRef = React.useRef();
+//  let marker = null;
+//  let infoWindow = null;
 
-  function handleResetLocation(){
-    setDefaultLocation({ ... DefaultLocation});
-    setZoom(DefaultZoom);
-  }
+//  const loadGoogleMapsScript = (callback) => {
+//    if (!window.google || !window.google.maps) {
+//      const script = document.createElement("script");
+//      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCPvqKJigbPJWjWpPcHXQ-c5TxuHTXQaRM&libraries=places`;
+//      script.onload = () => {
+//        if (callback) callback();
+//      };
+//      document.body.appendChild(script);
+//    } else {
+//      if (callback) callback();
+//    }
+//  };
 
+//  const initializeMap = () => {
+//    const curpoint = new window.google.maps.LatLng(latval, longval);
 
+//    const mapOptions = {
+//      center: curpoint,
+//      zoom: 10,
+//      mapTypeId: 'roadmap'
+//    };
+
+//    const map = new window.google.maps.Map(mapRef.current, mapOptions);
+
+//    marker = new window.google.maps.Marker({
+//      map: map,
+//      position: curpoint
+//    });
+
+//    infoWindow = new window.google.maps.InfoWindow();
+
+//    map.addListener('click', handleMapClick);
+//    marker.addListener('click', handleMarkerClick);
+
+//    updateInfoWindow();
+//  };
+
+//  const handleMapClick = (event) => {
+//    const newLongval = event.latLng.lng().toFixed(6);
+//    const newLatval = event.latLng.lat().toFixed(6);
+
+//    setLongval(newLongval);
+//    setLatval(newLatval);
+//  };
+
+//  const handleMarkerClick = () => {
+//    updateInfoWindow();
+//    infoWindow.open(marker.getMap(), marker);
+//  };
+
+//  const updateMapMarker = () => {
+//    const curpoint = new window.google.maps.LatLng(latval, longval);
+
+//    marker.setPosition(curpoint);
+//    marker.getMap().setCenter(curpoint);
+
+//    updateInfoWindow();
+//  };
+
+//  const updateInfoWindow = () => {
+//    const content = `Longitude: ${longval}<br>Latitude: ${latval}`;
+//    infoWindow.setContent(content);
+//  };
+
+//  // const handleJumpToLocation = () => {
+//  //   updateMapMarker();
+//  // };
+
+//  useEffect(() => {
+//   fetchEvents()
+//    loadGoogleMapsScript(() => {
+//      initializeMap();
+//    });
+//  }, [latval, longval]);
+
+const handleLocationChange = (newLatval, newLongval) => {
+  setLatval(newLatval);
+  setLongval(newLongval);
+};
 
   return (
     <>
@@ -463,10 +534,10 @@ export function Crisis() {
 
 
  <div className="w-full md:w-1/2 lg:w-1/4 px-4 py-0 h-10 mb-1 lg:mb-0">
-  <Input type='text' label="Latitute" id="lat" name="lat" value={location.lat} />
+  <Input type='text' label="Latitute" id="lat"  name="lat" value={latval} />
   </div>
   <div className="w-full md:w-1/2 lg:w-1/4 px-4 py-0 h-10 mb-1 lg:mb-0">
-  <Input type='text' label="Longitude" id="long" name="long" value={location.lng} />
+  <Input type='text' label="Longitude" id="long" name="long" value={longval} />
   </div>
   <br/>
   {/* <Input type='text' label="Zoom" value={zoom} /> */}
@@ -478,18 +549,14 @@ export function Crisis() {
 
       </div>
       <div className="w-full col-span-4 ">
-  {/* <MapPicker col-span-2 defaultLocation={defaultLocation}
-    zoom={zoom}
-    mapTypeId="roadmap"
-    style={{height:'200px'}}
-    onChangeLocation={handleChangeLocation} 
-    onChangeZoom={handleChangeZoom}
-    apiKey='AIzaSyD07E1VvpsN_0FvsmKAj4nK9GnLq-9jtj8'/> */}
+      <LocationPicker onLocationChange={handleLocationChange} />
+  {/* <div style={{ backgroundColor: "#E0E0E0", height: "200px" }} ref={mapRef}>
+          <p>- click on the map to change marker position</p>
+          <p>- click on the marker to view longitude/latitude information</p>
+        </div> */}
     </div>
    <br/>
-    <div className="col-span-2 px-4">
-    <Button onClick={handleResetLocation}>Reset Location</Button>
-    </div>
+    
                 </div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
