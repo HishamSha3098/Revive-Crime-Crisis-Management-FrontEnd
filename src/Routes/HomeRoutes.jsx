@@ -46,10 +46,14 @@ function HomeRoutes() {
     return (
       <>
       <div className="flex items-center justify-end py-1 px-5 bg-black">
-  <a size="sm" href="/profile" className="flex items-center text-gray-500 ml-2">
+  <Link size="sm" to="/profile" className="flex items-center text-gray-500 ml-2">
     <img src="https://static.vecteezy.com/system/resources/thumbnails/019/900/322/small/happy-young-cute-illustration-face-profile-png.png" alt="User Profile Logo" className="h-4 w-4 mr-2" />
     Profile
-  </a>
+  </Link>
+  <Link size="sm" to="/dashboard/event" className="flex items-center text-gray-500 ml-2">
+    
+    admin
+  </Link>
   {user_id?(<button onClick={handleLogout} className="text-gray-500 ml-2">Sign Out</button>):(<Link to="/login" className="text-gray-500 ml-2">Sign In</Link>)}
 </div>
       <div className="container absolute left-2/4 z-10 mx-auto -translate-x-2/4 p-4">
