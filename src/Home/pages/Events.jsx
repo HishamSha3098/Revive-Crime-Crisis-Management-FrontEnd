@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "@/Config/config";
 
-import ghfhg from '../../../public/img'
+
 
 
 
