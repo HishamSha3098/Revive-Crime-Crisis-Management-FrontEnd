@@ -55,7 +55,7 @@ export function EventHome() {
     <>
 
       <section className="relative block h-[50vh]">
-        <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('../../../public/img/banner-events.jpg')] bg-cover bg-center" />
+        <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('/img/banner-events.jpg')] bg-cover bg-center" />
 
         <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
 
