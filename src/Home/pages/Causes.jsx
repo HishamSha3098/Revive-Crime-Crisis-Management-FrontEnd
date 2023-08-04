@@ -47,6 +47,7 @@ export function CausesHome() {
     const response =await axios.get(`${API_URL}/crisis_list/`)
     setCrisis(response.data)
 
+    console.log(response.data,'----------------------this is respone--=====-=');
    
   }
 
@@ -186,7 +187,7 @@ Crisis.map((crisis,index)=>(
                 <CardHeader className="relative h-56">
                   <img
                     alt="Card Image"
-                    src={crisis.image}
+                    src={`${API_URL}/${crisis.image}`}
                     className="h-full w-full"
                   />
                 </CardHeader>

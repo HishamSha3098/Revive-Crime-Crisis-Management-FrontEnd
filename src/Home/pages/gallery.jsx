@@ -121,7 +121,7 @@ export function GalleryPost() {
 
 <section className="relative block h-[50vh]">
   <div
-    className="bg-profile-background absolute top-0 h-full w-full bg-[url('https://revive-crime-crisis-management-front-end-oiwj.vercel.app/public/img/banner-gallery.jpg')] bg-cover bg-center"
+    className="bg-profile-background absolute top-0 h-full w-full bg-[url('/img/banner-gallery.jpg')] bg-cover bg-center"
   />
 
   <div className="absolute top-0 h-full w-full bg-black/75" />

@@ -2,26 +2,27 @@ import {
   StarIcon,
   PresentationChartLineIcon,
   RocketLaunchIcon,
+  GlobeAltIcon,
 } from "@heroicons/react/24/solid";
 
 export const contactData = [
   {
-    title: "Excelent Services",
+    title: "Excelent Volunteer Services",
     icon: StarIcon,
     description:
-      "Some quick example text to build on the card title and make up the bulk of the card's content.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eu ex ac sapien commodo porttitor facilisis iaculis lorem.",
   },
   {
-    title: "Grow Your Market",
+    title: "Saved Many Life",
     icon: PresentationChartLineIcon,
     description:
-      "Some quick example text to build on the card title and make up the bulk of the card's content.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eu ex ac sapien commodo porttitor facilisis iaculis lorem.",
   },
   {
-    title: "Launch Time",
-    icon: RocketLaunchIcon,
+    title: "Expanding Internationaly",
+    icon: GlobeAltIcon,
     description:
-      "Some quick example text to build on the card title and make up the bulk of the card's content.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eu ex ac sapien commodo porttitor facilisis iaculis lorem.",
   },
 ];
 

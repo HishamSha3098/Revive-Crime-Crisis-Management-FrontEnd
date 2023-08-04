@@ -103,8 +103,8 @@ export default function ComplexNavbar() {
         color="white"
         className="p-1 font-normal"
       >
-        <Link href="#" className="flex items-center">
-          Contact Us
+        <Link to="/volunteer" className="flex items-center">
+          Volunteer
         </Link>
       </Typography>
     </ul>
@@ -131,7 +131,7 @@ export default function ComplexNavbar() {
           href="#"
           className="mr-4 cursor-pointer py-1.5 font-medium"
         >
-          <img src="public\img\reviviel ogo white.png" alt="Logo" className="h-10" />
+          <img src="\img\reviviel ogo white.png" alt="Logo" className="h-10" />
         </Typography>
         <div className="hidden lg:block">{navList}</div>
         <Button  size="sm" onClick={() => handleDonate()} className="hidden bg-green-500 lg:inline-block">

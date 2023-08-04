@@ -18,6 +18,7 @@ import Checkout from "@/Home/pages/Checkout";
 import PaymentSuccess from "@/Home/pages/CheckoutSuccessful";
 import PaymentFail from "@/Home/pages/paymentFailed";
 import { API_URL } from "@/Config/config";
+import VolunteerSection from "@/Home/pages/Volunteer";
 
 
 
@@ -74,6 +75,7 @@ function HomeRoutes() {
         <Route path="/Gallery-posts" element={<GalleryPost/>}/>
         <Route path="/complaint" element={<ComplaintRegister />} />
         <Route path="/Checkout" element={<Checkout />} />
+        <Route path="/volunteer" element={<VolunteerSection />} />
         
 
 

@@ -1,4 +1,4 @@
-import { Avatar, Typography, Button ,Input, Select, Option } from "@material-tailwind/react";
+import { Avatar, Typography, Button ,Input, Select, Option, Card, CardBody, Chip } from "@material-tailwind/react";
 import {
   MapPinIcon,
   BriefcaseIcon,
@@ -21,6 +21,8 @@ import { API_URL } from "@/Config/config";
 
 export function UserProfile() {
   const [showForm, setShowForm] = useState(false);
+  const [showCrisisTable, setShowCrisisTable] = useState(false);
+  const [showComplaintTable, setShowComplaintTable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user_id = localStorage.getItem('user_id');
   const [tableData, setTableData] = useState([]);
@@ -31,6 +33,8 @@ export function UserProfile() {
 
   // const [crisisId, setCrisisId] = useState(null);
   const [userData, setUserdata] = useState([]);
+  const [complaintData, setComplaintdata] = useState([]);
+  const [crisisData, setCrisisdata] = useState([]);
   const [formData, setFormData] = useState({
     id: null,
     name: '',
@@ -47,8 +51,52 @@ export function UserProfile() {
 
   useEffect(() => {
     fetchUserData();
+    fetchComplaintData();
   }, [showForm]);
   console.log("lll",formData.marital_status);
+
+  const TABLE_HEAD = ["Department", "Case-ID", "Status"];
+  // const TABLE_C_HEAD = ["Department", "Case-ID", "Status"];
+
+
+  const fetchCrisistData = async () =>{
+
+    try {
+      const response = await axios.get(`${API_URL}/crisis_list-user/`,{
+        params:{
+          user_id : user_id
+        }
+      });
+
+     
+      setCrisisdata(response.data);
+
+      console.log(formData,'its adter seting in get');
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+
+  }
+
+
+  const fetchComplaintData = async () =>{
+
+    try {
+      const response = await axios.get(`${API_URL}/complaints/`,{
+        params:{
+          user_id : user_id
+        }
+      });
+      setComplaintdata(response.data);
+
+      console.log(formData,'its adter seting in get');
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+
+  }
 
  const fetchUserData = async () => {
     try {
@@ -97,6 +145,17 @@ export function UserProfile() {
   const handleToggleForm = () => {
     setShowForm(true);
   };
+
+  const handleCrisisTable = ()=>{
+    setShowCrisisTable(!showCrisisTable)
+    fetchCrisistData();
+
+  } 
+  const handleComplaintTable = ()=>{
+    setShowComplaintTable(!showComplaintTable)
+    fetchCrisistData();
+
+  }
 
 
   const handleFileInputChange = (e) => {
@@ -220,8 +279,8 @@ export function UserProfile() {
                 </div>
                 <div className="mt-10 w-full justify-center grid gap-2 px-4 md:grid-cols-3 lg:grid-cols-3 lg:order-3 lg:mt-0 lg:w-4/12 lg:justify-end lg:self-center">
                   <Button onClick={handleToggleForm} className="bg-blue-400">Edit Profile</Button>
-                  <Button onClick={handleToggleForm} className="bg-blue-400">complaints</Button>
-                  <Button onClick={handleToggleForm} className="bg-blue-400">My Crisis</Button>
+                  <Button onClick={handleComplaintTable} className="bg-blue-400">complaints</Button>
+                  <Button onClick={handleCrisisTable} className="bg-blue-400">My Crisis</Button>
                 </div>
                 <div className="w-full px-4 lg:order-1 lg:w-4/12">
                   <div className="flex justify-center py-4 pt-8 lg:pt-4">
@@ -405,6 +464,135 @@ export function UserProfile() {
   </form>
   
 </div>
+
+
+      {/* complaints table */}
+
+      <Card className={`h-full w-full overflow-scroll ${showComplaintTable ? 'visible' : 'hidden'}`}>
+      <table className="w-full min-w-max table-auto text-left">
+        <thead>
+          <tr>
+            {TABLE_HEAD.map((head) => (
+              <th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  {head}
+                </Typography>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {complaintData.map((complaint,index) => (
+            <tr key={index} className="even:bg-blue-gray-50/50">
+              <td className="p-4">
+                <Typography variant="small" color="blue-gray" className="font-normal">
+                  {complaint.department}
+                </Typography>
+              </td>
+              <td className="p-4">
+                <Typography variant="small" color="blue-gray" className="font-normal">
+                  {complaint.name}
+                </Typography>
+              </td>
+              <td className="p-4">
+                <Typography variant="small" color="blue-gray" className="font-normal">
+                  {complaint.status}
+                </Typography>
+              </td>
+              
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </Card>
+    <br/>
+
+
+{/* crisi table starts here */}
+
+    <CardBody className={`overflow-x-scroll px-0 pt-0 pb-2 ${showCrisisTable ? 'visible' : 'hidden'}`}>
+          <table className="w-full min-w-[640px] table-auto">
+            <thead>
+              <tr>
+                {["img/Title", "Recived", "goal","status"].map((el) => (
+                  <th
+                    key={el}
+                    className="border-b border-blue-gray-50 py-3 px-5 text-left"
+                  >
+                    <Typography
+                      variant="small"
+                      className="text-[11px] font-bold uppercase text-blue-gray-400"
+                    >
+                      {el}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {crisisData.map(
+                (crisis,key) => {
+                  const className = `py-3 px-5 ${
+                    key === crisisData.length - 1
+                      ? ""
+                      : "border-b border-blue-gray-50"
+                  }`;
+
+                  return (
+                    <tr key={crisis.id}>
+                      <td className={className}>
+                        <div className="flex items-center gap-4">
+                          <Avatar src={`${API_URL}${crisis.image}`}
+                           alt={crisis.title} size="sm" />
+                          <div>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-semibold"
+                            >
+                              {crisis.title}
+                            </Typography>
+                            <Typography className="text-xs font-normal text-blue-gray-500">
+                              {/* {description}3 */}34567
+                            </Typography>
+                          </div>
+                        </div>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {crisis.recived_amount}
+                        </Typography>
+                        
+                      </td>
+                      
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {crisis.donation_goal}
+                        </Typography>
+                      </td>
+                      <td className={className}>
+                        <Chip
+                          variant="gradient"
+                          color={crisis.is_active ? "green" : "blue-gray"}
+                          value={crisis.is_active ? "Active" : "Closed"}
+                          className="py-0.5 px-2 text-[11px] font-medium"
+                        />
+                      </td>
+                    
+                    </tr>
+                  );
+                }
+              )}
+            </tbody>
+          </table>
+        </CardBody>
+    <br/>
+
+
 
             </div>
           </div>
