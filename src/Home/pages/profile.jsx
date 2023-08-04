@@ -95,7 +95,7 @@ export function UserProfile() {
 
 
   const handleToggleForm = () => {
-    setShowForm(!showForm);
+    setShowForm(true);
   };
 
 
@@ -389,11 +389,11 @@ export function UserProfile() {
   
   </div>
   <div className="w-full md:w-1/2 lg:w-1/4 px-4 pb-5 gap-6">
-    <Button type="submit" className="bg-blue-900">
+    <Button type="submit" className="bg-blue-900 gap-3">
       Submit
     </Button>
 
-    <Button onClick={handleToggleForm} className="bg-red-600">
+    <Button onClick={() => setShowForm(false)} className="bg-red-600">
       Close
     </Button>
   </div>

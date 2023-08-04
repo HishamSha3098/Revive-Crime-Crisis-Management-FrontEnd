@@ -243,7 +243,9 @@ export function Gallery() {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {gal.description}
+                        {gal.description.length > 50
+                      ? `${gal.description.substring(0, 40)}...`
+                      : gal.description}
                         </Typography>
                         
                       </td>
