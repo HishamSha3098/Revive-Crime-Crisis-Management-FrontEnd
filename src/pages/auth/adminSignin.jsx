@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 // import LoadingSpinner from '../../utils';
 import toast, { Toaster } from 'react-hot-toast';
 import LoadingSpinner from "@/utils/loadingSpinner";
+import { API_URL } from "@/Config/config";
 
 
 
@@ -45,7 +46,7 @@ export function AdminSignIn() {
     onSubmit: async (values, action) => {
       try {
         setIsLoading(true); // Start showing the spinner
-        const { data } = await axios.post('http://127.0.0.1:8000/adminLogin/', values);
+        const { data } = await axios.post(`${API_URL}/adminLogin/`, values);
         console.log(values);
         localStorage.setItem('user_id', data.user_id);
         localStorage.setItem('Staff_status', data.staff_status);

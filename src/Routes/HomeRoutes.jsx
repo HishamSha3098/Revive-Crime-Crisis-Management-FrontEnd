@@ -11,7 +11,7 @@ import ComplexNavbar from "@/widgets/layout/navbar";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, Link } from "react-router-dom";
 
 import { ComplaintRegister } from "@/Home/pages/Complaint";
 import Checkout from "@/Home/pages/Checkout";
@@ -50,7 +50,7 @@ function HomeRoutes() {
     <img src="https://static.vecteezy.com/system/resources/thumbnails/019/900/322/small/happy-young-cute-illustration-face-profile-png.png" alt="User Profile Logo" className="h-4 w-4 mr-2" />
     Profile
   </a>
-  {user_id?(<button onClick={handleLogout} className="text-gray-500 ml-2">Sign Out</button>):(<a href="/login" className="text-gray-500 ml-2">Sign In</a>)}
+  {user_id?(<button onClick={handleLogout} className="text-gray-500 ml-2">Sign Out</button>):(<Link to="/login" className="text-gray-500 ml-2">Sign In</Link>)}
 </div>
       <div className="container absolute left-2/4 z-10 mx-auto -translate-x-2/4 p-4">
     
