@@ -95,7 +95,7 @@ for (let pair of formData.entries()) {
 
 <section className="relative block h-[50vh]">
   <div
-    className="bg-profile-background absolute top-0 h-full w-full bg-[url('http://localhost:5173/public/img/banner-events.jpg')] bg-cover bg-center"
+    className="bg-profile-background absolute top-0 h-full w-full bg-[url('https://jamapunji.pk/sites/default/files/content/banners/banner-complaints.jpg')] bg-cover bg-center"
   />
 
   <div className="absolute top-0 h-full w-full bg-black/75" />

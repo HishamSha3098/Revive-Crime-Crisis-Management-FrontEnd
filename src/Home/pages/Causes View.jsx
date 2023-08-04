@@ -140,7 +140,7 @@ export function CausesView() {
 
 <section className="relative block h-[50vh]">
   <div
-    className="bg-profile-background absolute top-0 h-full w-full bg-[url('http://localhost:5173/public/img/banner-crisis.jpg')] bg-cover bg-center"
+    className="bg-profile-background absolute top-0 h-full w-full bg-[url('/img/banner-crisis.jpg')] bg-cover bg-center"
   />
 
   <div className="absolute top-0 h-full w-full bg-black/75" />
