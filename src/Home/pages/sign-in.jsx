@@ -53,7 +53,8 @@ export function SignIn() {
         const { data } = await axios.post(endpoint, values);
         console.log(values);
         localStorage.setItem('user_id', data.user_id);
-        localStorage.setItem('Staff_status', data.staff_status);
+        
+        
        
         if (data.message === 'mail send'){
           toast.success("Reset Mail Send Successfully")

@@ -50,6 +50,7 @@ export function AdminSignIn() {
         console.log(values);
         localStorage.setItem('user_id', data.user_id);
         localStorage.setItem('Staff_status', data.staff_status);
+        localStorage.setItem('admin_status', data.admin_status);
         // console.log(data.admin);
         
         

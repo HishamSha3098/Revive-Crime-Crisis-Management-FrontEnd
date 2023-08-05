@@ -1,3 +1,4 @@
+import { API_URL } from "@/Config/config";
 import {
   Card,
   CardHeader,
@@ -5,9 +6,13 @@ import {
   CardFooter,
   Typography,
 } from "@material-tailwind/react";
+import axios from "axios";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 
-export function StatisticsCard({ color, icon, title, value, footer }) {
+export function StatisticsCard({ color, icon,value, title, footer }) {
+  
+  
   return (
     <Card>
       <CardHeader

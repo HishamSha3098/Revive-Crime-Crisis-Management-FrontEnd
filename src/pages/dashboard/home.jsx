@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Card,
@@ -21,14 +21,98 @@ import {
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
 import { StatisticsChart } from "@/widgets/charts";
+import { BanknotesIcon, UserPlusIcon, UserIcon, ChartBarIcon, DocumentChartBarIcon } from "@heroicons/react/24/solid";
+
 import {
-  statisticsCardsData,
+  
   statisticsChartsData,
   projectsTableData,
   ordersOverviewData,
 } from "@/data";
+import axios from "axios";
+import { API_URL } from "@/Config/config";
 
 export function DashHome() {
+
+
+  const [statisticsCardsData, setStatisticsCardsData] = useState([
+    {
+      color: "blue",
+      icon: BanknotesIcon,
+      title: "Total Donation Amount",
+      value: null, // We'll fetch this value from the API
+      footer: {
+        color: "text-green-500",
+        value: "+55%",
+        label: "than last week",
+      },
+    },
+    {
+      color: "pink",
+      icon: UserIcon,
+      title: "Total Users",
+      value: null, // We'll fetch this value from the API
+      footer: {
+        color: "text-green-500",
+        value: "+3%",
+        label: "than last month",
+      },
+    },
+    {
+      color: "green",
+      icon: DocumentChartBarIcon,
+      title: "Total Crisis",
+      value: null, // We'll fetch this value from the API
+      footer: {
+        color: "text-red-500",
+        value: "-2%",
+        label: "than yesterday",
+      },
+    },
+    {
+      color: "orange",
+      icon: ChartBarIcon,
+      title: "Total Complaints",
+      value: null, // We'll fetch this value from the API
+      footer: {
+        color: "text-green-500",
+        value: "+5%",
+        label: "than yesterday",
+      },
+    },
+  ]);
+
+  const fetchStatisticsCardsData = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/get-statistics-cards-data/`);
+      setStatisticsCardsData((prevData) => [
+        {
+          ...prevData[0],
+          value: response.data.total_donation_amount,
+        },
+        {
+          ...prevData[1],
+          value: response.data.total_users,
+        },
+        {
+          ...prevData[2],
+          value: response.data.total_crisis,
+        },
+        {
+          ...prevData[3],
+          value: response.data.total_complaints,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error fetching statistics cards data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStatisticsCardsData();
+  }, []);
+  
+  
   return (
     <div className="mt-12">
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
@@ -66,7 +150,7 @@ export function DashHome() {
           />
         ))}
       </div>
-      <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
+      {/* <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-2">
           <CardHeader
             floated={false}
@@ -251,7 +335,7 @@ export function DashHome() {
             )}
           </CardBody>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 }

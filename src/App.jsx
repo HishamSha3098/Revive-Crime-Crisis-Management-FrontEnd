@@ -8,10 +8,15 @@ import { CrisisPreview } from "./pages/dashboard/crisisPreview";
 import PaymentSuccess from "./Home/pages/CheckoutSuccessful";
 import PaymentFail from "./Home/pages/paymentFailed";
 import LocationPicker from "./pages/dashboard/LocationPicker";
+import AdminProtectedRoute from "./Routes/AdminProtectedRoute";
 
 
 // import HomeRoutes from "./HomeRoutes.jsx";
 // import { Navbar } from "./widgets/layout";
+
+
+
+
 
 function App() {
   return (
@@ -22,7 +27,7 @@ function App() {
 
       <Route path="/admin" element={<AdminSignIn />} />
       {/* <Route path="/a" element={<A/>}/> */}
-      <Route path="/dashboard/*" element={<Dashboard />} />
+      <Route path="/dashboard/*" element={<AdminProtectedRoute><Dashboard /></AdminProtectedRoute>} />
       <Route path="/*" element={<HomeRoutes/>}/>
       <Route path="/auth/*" element={<Auth />} />
       <Route path="/manage/preview" element={<CrisisPreview />} />

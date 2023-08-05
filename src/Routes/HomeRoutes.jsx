@@ -19,6 +19,7 @@ import PaymentSuccess from "@/Home/pages/CheckoutSuccessful";
 import PaymentFail from "@/Home/pages/paymentFailed";
 import { API_URL } from "@/Config/config";
 import VolunteerSection from "@/Home/pages/Volunteer";
+import ProtectedRoute from "./ProtectedRoute";
 
 
 
@@ -67,13 +68,13 @@ function HomeRoutes() {
         <Route path="/register" element={<SignUp/>}/>
         <Route path="/reset-pass/:userId" element={<PasswordReset/>}/>
 
-        <Route path="/profile" element={<UserProfile/>}/>
+        <Route path="/profile" element={<ProtectedRoute><UserProfile/></ProtectedRoute>}/>
         <Route path="/CausesHome" element={<CausesHome/>}/>
         <Route path="/Causes-view" element={<CausesView/>}/>
         <Route path="/event-Home" element={<EventHome/>}/>
         <Route path="/Event-view" element={<EventView/>}/>
         <Route path="/Gallery-posts" element={<GalleryPost/>}/>
-        <Route path="/complaint" element={<ComplaintRegister />} />
+        <Route path="/complaint" element={<ProtectedRoute><ComplaintRegister /></ProtectedRoute>} />
         <Route path="/Checkout" element={<Checkout />} />
         <Route path="/volunteer" element={<VolunteerSection />} />
         

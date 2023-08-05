@@ -50,6 +50,7 @@ export function DashboardNavbar() {
         console.log('Logged out successfully!');
         localStorage.removeItem('user_id')
         localStorage.removeItem('Staff_status')
+        localStorage.removeItem('admin_status')
         toast.success("LogOut Successfull")
         navigate("/admin")
 

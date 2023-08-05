@@ -76,12 +76,12 @@ const staffRoutes = [
         path: "/complaint-view",
         element: <ComplaintsView />,
       },
-      {
-        icon: <UsersIcon {...icon} />,
-        name: "Staff List",
-        path: "/profile",
-        element: <Profile />,
-      },
+      // {
+      //   icon: <UsersIcon {...icon} />,
+      //   name: "Staff List",
+      //   path: "/profile",
+      //   element: <Profile />,
+      // },
     ],
   },
 ];
