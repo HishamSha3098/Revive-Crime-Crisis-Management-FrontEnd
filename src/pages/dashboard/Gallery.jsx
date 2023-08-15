@@ -41,11 +41,19 @@ import { API_URL } from "@/Config/config";
 
 export function Gallery() {
   const [tableData, setTableData] = useState([]);
+  const [gallery, setGallery] = useState([]);
+
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [existingImage, setExistingImage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2; // Number of items to display per page
+  const totalPages = Math.ceil(gallery.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const visibleData = gallery.slice(startIndex, endIndex);
 
-  const [gallery, setGallery] = useState([]);
+
   const [formData, setFormData] = useState({
     id: null,
     title: '',
@@ -214,7 +222,7 @@ export function Gallery() {
               </tr>
             </thead>
             <tbody>
-              {gallery.map(
+              {visibleData.map(
                 (gal,key) => {
                   const className = `py-3 px-5 ${
                     key === gallery.length - 1
@@ -280,7 +288,25 @@ export function Gallery() {
           </table>
         </CardBody>
       
-
+        <div className="flex items-center justify-center mt-4">
+  <button
+    onClick={() => setCurrentPage(currentPage - 1)}
+    disabled={currentPage === 1}
+    className="px-4 py-2 rounded-l-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Previous
+  </button>
+  <span className="px-4 py-2 text-gray-700">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={() => setCurrentPage(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    className="px-4 py-2 rounded-r-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Next
+  </button>
+</div>
         </CardBody>
       </Card>
       {showModal ? (

@@ -76,6 +76,12 @@ const staffRoutes = [
         path: "/complaint-view",
         element: <ComplaintsView />,
       },
+      {
+        icon: <DocumentTextIcon {...icon} />,
+        name: "Staff Applications",
+        path: "/staff-applicarion",
+        element: <StaffApplication />,
+      },
       // {
       //   icon: <UsersIcon {...icon} />,
       //   name: "Staff List",

@@ -3,6 +3,7 @@ import axios from 'axios';  // Import Axios
 import { useLocation } from 'react-router-dom';
 import { API_URL } from '@/Config/config';
 import { toast } from 'react-hot-toast';
+import { Footer } from '../widgets/layout';
 
 const Checkout = () => {
     const [donationAmount, setDonationAmount] = useState('');
@@ -34,7 +35,14 @@ const Checkout = () => {
 
     return (
         <>
-            <div className="flex items-center justify-center h-screen">
+        <section className="relative block h-[50vh]">
+  <div className="bg-profile-background absolute top-0 h-full w-full bg-[url('/img/banner-crisis.jpg')] bg-cover bg-center" />
+
+  <div className="absolute top-0 h-full w-full bg-black/75 bg-cover bg-center" />
+
+ 
+</section>
+            <div className="flex items-center justify-center pt-6">
   <div className="bg-white p-6 rounded-lg shadow-md">
     <h2 className="text-2xl font-semibold mb-4">Enter Amount to Pay</h2>
     <div className="flex items-center space-x-4">
@@ -53,6 +61,11 @@ const Checkout = () => {
     </div>
   </div>
 </div>
+
+<br/>
+      <div className="bg-blue-gray-50/50">
+        <Footer />
+      </div>
 
         </>
     );

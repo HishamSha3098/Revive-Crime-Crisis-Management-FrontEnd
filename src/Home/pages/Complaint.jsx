@@ -129,7 +129,7 @@ for (let pair of formData.entries()) {
             Register Your Complaint Here.
           </Typography>
           <form className="mt-8 mb-2 max-w-screen-md mx-auto" onSubmit={handleSubmit}>
-            <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
+          <div class="mb-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="col-span-2">
                 <select
                   id="marital_status"

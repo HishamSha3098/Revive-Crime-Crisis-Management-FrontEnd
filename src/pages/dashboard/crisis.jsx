@@ -50,7 +50,20 @@ export function Crisis() {
   const [crisisId, setCrisisId] = useState(null);
   const [crises, setCrises] = useState([]);
   const [userCrises, setUserCrises] = useState([]);
-  
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3; // Number of items to display per page
+  const totalPages = Math.ceil(crises.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const visibleData = crises.slice(startIndex, endIndex);
+
+  const [currentPage2, setCurrentPage2] = useState(1);
+  const itemsPerPage2 = 2; // Number of items to display per page
+  const totalPages2 = Math.ceil(userCrises.length / itemsPerPage2);
+  const startIndex2 = (currentPage2 - 1) * itemsPerPage2;
+  const endIndex2 = startIndex2 + itemsPerPage2;
+  const visibleData2 = userCrises.slice(startIndex2, endIndex2);
 
   const [formData, setFormData] = useState({
     id: null,
@@ -282,7 +295,7 @@ export function Crisis() {
               </tr>
             </thead>
             <tbody>
-              {crises.map(
+              {visibleData.map(
                 (crisis,key) => {
                   const className = `py-3 px-5 ${
                     key === crises.length - 1
@@ -353,7 +366,25 @@ export function Crisis() {
             </tbody>
           </table>
         </CardBody>
-      
+        <div className="flex items-center justify-center mt-4">
+  <button
+    onClick={() => setCurrentPage(currentPage - 1)}
+    disabled={currentPage === 1}
+    className="px-4 py-2 rounded-l-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Previous
+  </button>
+  <span className="px-4 py-2 text-gray-700">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={() => setCurrentPage(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    className="px-4 py-2 rounded-r-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Next
+  </button>
+</div>
 
         </CardBody>
       </Card>
@@ -390,7 +421,7 @@ export function Crisis() {
               </tr>
             </thead>
             <tbody>
-              {userCrises.map(
+              {visibleData2.map(
                 (table , key) => {
                   const className = `py-3 px-5 ${
                     key === authorsTableData.length - 1
@@ -459,7 +490,25 @@ export function Crisis() {
           </table>
         </CardBody>
       
-
+        <div className="flex items-center justify-center mt-4">
+  <button
+    onClick={() => setCurrentPage2(currentPage2 - 1)}
+    disabled={currentPage2 === 1}
+    className="px-4 py-2 rounded-l-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Previous
+  </button>
+  <span className="px-4 py-2 text-gray-700">
+    Page {currentPage2} of {totalPages2}
+  </span>
+  <button
+    onClick={() => setCurrentPage2(currentPage2 + 1)}
+    disabled={currentPage2 === totalPages2}
+    className="px-4 py-2 rounded-r-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Next
+  </button>
+</div>
         </CardBody>
       </Card>
 

@@ -29,6 +29,14 @@ export function CausesHome() {
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const user_id = localStorage.getItem("user_id")
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8; // Number of items to display per page
+  const totalPages = Math.ceil(Crisis.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const visibleData = Crisis.slice(startIndex, endIndex);
+
   const [formData, setFormData] = useState({
     id: null,
     title: '',
@@ -182,7 +190,7 @@ export function CausesHome() {
 <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-7xl gap-4">
 
 {Crisis.length > 0 ?(
-Crisis.map((crisis,index)=>(
+visibleData.map((crisis,index)=>(
 <Card key={index} className="shadow-lg mt-6 shadow-gray-500/10">
                 <CardHeader className="relative h-56">
                   <img
@@ -226,6 +234,11 @@ Crisis.map((crisis,index)=>(
                   
                   </div>
                   </div>
+
+
+
+
+
                 </CardBody>
               </Card>
                 ))
@@ -234,9 +247,30 @@ Crisis.map((crisis,index)=>(
              )}
 
               
+
               </div>
+              
               </div>
-      
+              <div className="flex items-center justify-center mt-4">
+  <button
+    onClick={() => setCurrentPage(currentPage - 1)}
+    disabled={currentPage === 1}
+    className="px-4 py-2 rounded-l-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Previous
+  </button>
+  <span className="px-4 py-2 text-gray-700">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={() => setCurrentPage(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    className="px-4 py-2 rounded-r-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Next
+  </button>
+</div>
+<br/>
       <div className="bg-blue-gray-50/50">
         <Footer />
       </div>

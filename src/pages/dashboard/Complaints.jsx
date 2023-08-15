@@ -41,6 +41,14 @@ import { API_URL } from "@/Config/config";
 export function ComplaintsView() {
   const [tableData, setTableData] = useState([]);
   const [status, setStatus] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2; // Number of items to display per page
+  const totalPages = Math.ceil(tableData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const visibleData = tableData.slice(startIndex, endIndex);
+
+
 
   useEffect(() => {
     fetchData();
@@ -136,7 +144,7 @@ export function ComplaintsView() {
               </tr>
             </thead>
             <tbody>
-              {tableData.map(
+              {visibleData.map(
                 (table , key) => {
                   const className = `py-3 px-5 ${
                     key === authorsTableData.length - 1
@@ -148,7 +156,7 @@ export function ComplaintsView() {
                     <tr key={name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={table.image} alt={name} size="sm" />
+                          <Avatar src={`${API_URL}${table.image}`} alt={name} size="sm" />
                           <div>
                             <Typography
                               variant="small"
@@ -204,7 +212,26 @@ export function ComplaintsView() {
             </tbody>
           </table>
         </CardBody>
-      
+        <div className="flex items-center justify-center mt-4">
+  <button
+    onClick={() => setCurrentPage(currentPage - 1)}
+    disabled={currentPage === 1}
+    className="px-4 py-2 rounded-l-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Previous
+  </button>
+  <span className="px-4 py-2 text-gray-700">
+    Page {currentPage} of {totalPages}
+  </span>
+  <button
+    onClick={() => setCurrentPage(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    className="px-4 py-2 rounded-r-md bg-blue-500 text-white disabled:bg-gray-300 disabled:text-gray-500"
+  >
+    Next
+  </button>
+</div>
+
 
         </CardBody>
       </Card>
